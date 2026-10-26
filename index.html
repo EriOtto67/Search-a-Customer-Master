@@ -609,21 +609,7 @@
 }
 
 .history-item {
-  display: grid;
-
-  grid-template-columns:
-    220px
-    minmax(0, 1fr);
-
-  grid-template-rows:
-    auto
-    auto;
-
-  column-gap: 18px;
-  row-gap: 0;
-
   padding: 18px 0;
-
   border-bottom: 1px solid #eeeeee;
 }
 
@@ -632,11 +618,20 @@
 }
 
 
-/* 日付：左上 */
+/* 1行目：日付＋内容 */
+
+.history-first-line {
+  display: flex;
+  align-items: baseline;
+
+  gap: 24px;
+}
+
+
+/* 日付 */
 
 .history-date {
-  grid-column: 1;
-  grid-row: 1;
+  flex: 0 0 220px;
 
   margin: 0;
   padding: 0;
@@ -650,34 +645,15 @@
 }
 
 
-/* 時刻：左下 */
-
-.history-time {
-  grid-column: 1;
-  grid-row: 2;
-
-  margin: 0;
-  padding: 0;
-
-  color: #333;
-
-  font-size: 16px;
-  font-weight: 500;
-
-  line-height: 1.6;
-}
-
-
-/* 内容：右上 */
+/* 内容 */
 
 .history-content {
-  grid-column: 2;
-  grid-row: 1;
+  flex: 1;
+
+  min-width: 0;
 
   margin: 0;
   padding: 0;
-
-  min-width: 0;
 
   color: #333;
 
@@ -687,6 +663,21 @@
   line-height: 1.6;
 
   white-space: pre-wrap;
+}
+
+
+/* 時刻 */
+
+.history-time {
+  margin: 0;
+  padding: 0;
+
+  color: #333;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  line-height: 1.6;
 }
     
     .history-loading,
@@ -1033,15 +1024,19 @@ return `
 
   <div class="history-item">
 
-    <div class="history-date">
-      ${escapeHtml(dateText)}
-    </div>
+    <div class="history-first-line">
 
-<div class="history-content">
-  ${escapeHtml(
-    String(history.content ?? "").trim()
-  )}
-</div>
+      <div class="history-date">
+        ${escapeHtml(dateText)}
+      </div>
+
+      <div class="history-content">
+        ${escapeHtml(
+          String(history.content ?? "").trim()
+        )}
+      </div>
+
+    </div>
 
     <div class="history-time">
       ${escapeHtml(timeText)}
@@ -1050,7 +1045,7 @@ return `
   </div>
 
 `;
-
+    
   }).join("");
 
 }
