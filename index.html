@@ -1330,17 +1330,23 @@ historyCreateButton.addEventListener(
 
       <div class="form-row">
 
-        <div class="form-label">
-          対応日時
-        </div>
+  <div class="form-label">
+    対応日時
+  </div>
 
-        <div class="form-datetime">
-          ${year}年${Number(month)}月${Number(day)}日
-          ${hour}:${minute}
-        </div>
+  <div class="form-datetime">
 
-      </div>
+    <div>
+      ${year}年${Number(month)}月${Number(day)}日（${getJapaneseWeekday(year, month, day)}）
+    </div>
 
+    <div>
+      ${Number(hour)}時${minute}分
+    </div>
+
+  </div>
+
+</div>
 
       <div class="form-two-columns">
 
@@ -1827,6 +1833,34 @@ if (historyList) {
 // 西暦 → 和暦＋西暦
 // =========================================================
 
+// =========================================================
+// 曜日取得
+// =========================================================
+
+function getJapaneseWeekday(year, month, day) {
+
+  const date = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day)
+  );
+
+  const weekdays = [
+    "日",
+    "月",
+    "火",
+    "水",
+    "木",
+    "金",
+    "土"
+  ];
+
+  return weekdays[
+    date.getDay()
+  ];
+
+}
+    
 function formatInspectionDate(value) {
 
   if (!value) {
