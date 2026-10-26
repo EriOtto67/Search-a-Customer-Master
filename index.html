@@ -752,6 +752,78 @@ const response = await fetch(SEARCH_API_URL, {
 
 }
 
+    // =========================================================
+// 対応履歴取得
+// =========================================================
+
+async function fetchHistories(vehicleId) {
+
+  const response = await fetch(
+    HISTORY_API_URL,
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        vehicleId: vehicleId
+      })
+    }
+  );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      `HTTPエラー: ${response.status}`
+    );
+
+  }
+
+
+  const data =
+    await response.json();
+
+
+  return data.histories || [];
+
+}
+
+
+// =========================================================
+// 対応履歴HTML生成
+// =========================================================
+
+function createHistoryHtml(histories) {
+
+  if (!histories || histories.length === 0) {
+
+    return `
+      <div class="history-empty">
+        対応履歴はありません。
+      </div>
+    `;
+
+  }
+
+
+  return histories.map(history => `
+
+    <div class="history-item">
+
+      <div class="history-content">
+        ${escapeHtml(
+          history.content
+        )}
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
 
     // =========================================================
     // 検索結果表示
@@ -942,39 +1014,8 @@ card.appendChild(loading);
 
     try {
 
-      const response = await fetch(
-        HISTORY_API_URL,
-        {
-
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            vehicleId: recordId
-          })
-
-        }
-      );
-
-
-      if (!response.ok) {
-
-        throw new Error(
-          `HTTPエラー: ${response.status}`
-        );
-
-      }
-
-
-      const data =
-        await response.json();
-
-
       const histories =
-        data.histories || [];
+  await fetchHistories(recordId);
 
 
       // 履歴0件
@@ -1005,6 +1046,7 @@ card.appendChild(loading);
     ${escapeHtml(
       history.content
     )}
+    
   </div>
 
 </div>
@@ -1443,12 +1485,32 @@ form
 
 
         alert(
-          "対応履歴を登録しました。"
-        );
+  "対応履歴を登録しました。"
+);
 
 
-        // 登録フォームを閉じる
-        form.remove();
+// 登録フォームを閉じる
+form.remove();
+
+
+// 最新の対応履歴を再取得
+const latestHistories =
+  await fetchHistories(recordId);
+
+
+// 対応履歴一覧を更新
+const historyList =
+  loading.querySelector(".history-list");
+
+
+if (historyList) {
+
+  historyList.innerHTML =
+    createHistoryHtml(
+      latestHistories
+    );
+
+}
 
       }
 
