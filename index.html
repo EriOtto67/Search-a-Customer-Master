@@ -229,6 +229,22 @@
    操作ボタン
 ============================== */
 
+    .action-title {
+  margin-bottom: 16px;
+
+  color: #00b84f;
+
+  font-size: 23px;
+  font-weight: 700;
+
+  letter-spacing: 0.03em;
+}
+
+.action-section {
+  padding-bottom: 22px;
+  border-bottom: 1px solid #e2e2e2;
+}
+    
 .action-buttons {
   display: flex;
   gap: 10px;
@@ -278,6 +294,7 @@
 }
 
 .history-title {
+  margin-top: 22px;
   margin-bottom: 16px;
 
   color: #00b84f;
@@ -379,6 +396,10 @@
       }
 
       .history-title {
+  font-size: 20px;
+}
+
+      .action-title {
   font-size: 20px;
 }
 
@@ -832,35 +853,44 @@ card.appendChild(loading);
         `).join("");
 
 
-      loading.innerHTML = `
+loading.innerHTML = `
 
-  <div class="action-buttons">
+  <div class="action-section">
 
-    <button
-      type="button"
-      class="action-button"
-      data-action="customer-master"
-    >
-      顧客マスタ確認
-    </button>
+    <div class="action-title">
+      各種ボタン
+    </div>
 
-    <button
-      type="button"
-      class="action-button"
-      data-action="create-history"
-    >
-      対応履歴作成
-    </button>
+    <div class="action-buttons">
 
-    <button
-      type="button"
-      class="action-button"
-      data-action="line-talk"
-    >
-      LINEトーク
-    </button>
+      <button
+        type="button"
+        class="action-button"
+        data-action="customer-master"
+      >
+        顧客マスタ確認
+      </button>
+
+      <button
+        type="button"
+        class="action-button"
+        data-action="create-history"
+      >
+        対応履歴作成
+      </button>
+
+      <button
+        type="button"
+        class="action-button"
+        data-action="line-talk"
+      >
+        LINEトーク
+      </button>
+
+    </div>
 
   </div>
+
 
   <div class="history-title">
     対応履歴
