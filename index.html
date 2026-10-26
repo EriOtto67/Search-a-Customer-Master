@@ -1234,8 +1234,84 @@
   </main>
 
 
-  <script>
+  <!-- =====================================================
+       対応履歴登録用パスワードポップアップ
+  ====================================================== -->
 
+  <div
+    id="historyPasswordModal"
+    class="history-password-overlay"
+    aria-hidden="true"
+  >
+
+    <div
+      class="history-password-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="historyPasswordModalTitle"
+    >
+
+      <div
+        id="historyPasswordModalTitle"
+        class="history-password-title"
+      >
+        対応履歴登録
+      </div>
+
+      <p class="history-password-description">
+        対応履歴を登録するため、パスワードを入力してください。
+      </p>
+
+      <label
+        for="historyPasswordInput"
+        class="history-password-label"
+      >
+        パスワード
+      </label>
+
+      <input
+        type="password"
+        id="historyPasswordInput"
+        class="history-password-input"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        placeholder="パスワードを入力"
+        autocomplete="off"
+      >
+
+      <div
+        id="historyPasswordMessage"
+        class="history-password-message"
+        aria-live="polite"
+      ></div>
+
+      <div class="history-password-button-row">
+
+        <button
+          type="button"
+          id="historyPasswordCancelButton"
+          class="history-password-cancel-button"
+        >
+          キャンセル
+        </button>
+
+        <button
+          type="button"
+          id="historyPasswordConfirmButton"
+          class="history-password-confirm-button"
+        >
+          確認して登録
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    
     // =========================================================
     // 設定
     // =========================================================
@@ -1248,6 +1324,9 @@
 
     // 対応履歴取得
     const HISTORY_API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/15/workflows/8e2c8217ed224cf39c19df016ace6f73/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=u4ZWV2byxn9qOV8sLU4RII0MBRn1HMYaw-Ff7gv7rfQ";
+
+    // 対応履歴登録前のパスワード認証
+    const HISTORY_AUTH_API_URL ="https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/28/workflows/43d45756d461414ab0f4cfd2522dd98a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=WNYAbA5_wLYo-zza2kzLvlUDxQGOLvXieIdKcuPX0jg";
 
     // 対応履歴登録
     const HISTORY_CREATE_API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/16/workflows/72e5f493229145af802abe15c29eef53/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FmKezmthhBdyE5Y3Z-7nZ3sRsvC_FKeDf-e8Hghsous";
@@ -2503,7 +2582,281 @@ form
       // 対応内容
       const content =
         form
-          .querySelector
+          .querySelector(".history-content-input")
+          .value
+          .trim();
+
+
+      // フォームを開いた時点の日時
+      const date =
+        form.dataset.date;
+
+      const time =
+        form.dataset.time;
+
+
+      // 対応種別の必須チェック
+      if (types.length === 0) {
+
+        alert(
+          "対応種別を選択してください。"
+        );
+
+        return;
+
+      }
+
+
+      // =====================================================
+      // パスワード認証
+      // =====================================================
+
+      let passwordMessage = "";
+
+
+      while (true) {
+
+        const historyPassword =
+          await requestHistoryPassword(
+            passwordMessage
+          );
+
+
+        passwordMessage = "";
+
+
+        // キャンセルされた場合
+        if (historyPassword === null) {
+
+          return;
+
+        }
+
+
+        try {
+
+          const authResponse =
+            await fetch(
+              HISTORY_AUTH_API_URL,
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+                  password: historyPassword
+                })
+              }
+            );
+
+
+          // パスワード不一致
+          if (authResponse.status === 401) {
+
+            passwordMessage =
+              "パスワードが違います。";
+
+            continue;
+
+          }
+
+
+          // 401以外のHTTPエラー
+          if (!authResponse.ok) {
+
+            throw new Error(
+              `認証HTTPエラー: ${authResponse.status}`
+            );
+
+          }
+
+
+          const authResult =
+            await authResponse.json();
+
+
+          // successがtrue以外
+          if (authResult.success !== true) {
+
+            passwordMessage =
+              "パスワードが違います。";
+
+            continue;
+
+          }
+
+
+          // 認証成功
+          break;
+
+        }
+
+        catch (error) {
+
+          console.error(
+            "対応履歴登録前の認証エラー:",
+            error
+          );
+
+
+          alert(
+            "パスワードの確認に失敗しました。"
+          );
+
+          return;
+
+        }
+
+      }
+
+
+      const submitButton =
+        form.querySelector(
+          ".form-submit-button"
+        );
+
+
+      // 二重登録防止
+      submitButton.disabled = true;
+
+      submitButton.textContent =
+        "登録中...";
+
+
+      try {
+
+        // =====================================================
+        // 既存の対応履歴登録Power Automateを実行
+        // =====================================================
+
+        const response =
+          await fetch(
+            HISTORY_CREATE_API_URL,
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body: JSON.stringify({
+
+                vehicleId:
+                  recordId,
+
+                date:
+                  date,
+
+                time:
+                  time,
+
+                types:
+                  types,
+
+                approaches:
+                  approaches,
+
+                staff:
+                  staff,
+
+                content:
+                  content
+
+              })
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            `HTTPエラー: ${response.status}`
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        console.log(
+          "対応履歴登録結果:",
+          data
+        );
+
+
+        if (data.success !== true) {
+
+          throw new Error(
+            data.message ||
+            "登録結果が正常ではありません。"
+          );
+
+        }
+
+
+        alert(
+          "対応履歴を登録しました。"
+        );
+
+
+        // 登録フォームを閉じる
+        form.remove();
+
+
+        // 最新の対応履歴を再取得
+        const latestHistories =
+          await fetchHistories(
+            recordId
+          );
+
+
+        // 対応履歴一覧を更新
+        const historyList =
+          loading.querySelector(
+            ".history-list"
+          );
+
+
+        if (historyList) {
+
+          historyList.innerHTML =
+            createHistoryHtml(
+              latestHistories
+            );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "対応履歴登録エラー:",
+          error
+        );
+
+
+        alert(
+          "対応履歴の登録に失敗しました。"
+        );
+
+
+        submitButton.disabled = false;
+
+        submitButton.textContent =
+          "登録する";
+
+      }
+
+    }
+  );
+    
     // フォーム内クリックでカードを閉じない
     form.addEventListener(
       "click",
@@ -2711,81 +3064,6 @@ function normalizeText(value) {
       return div.innerHTML;
 
     }
-
-      <!-- =====================================================
-       対応履歴登録用パスワードポップアップ
-  ====================================================== -->
-
-  <div
-    id="historyPasswordModal"
-    class="history-password-overlay"
-    aria-hidden="true"
-  >
-
-    <div
-      class="history-password-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="historyPasswordModalTitle"
-    >
-
-      <div
-        id="historyPasswordModalTitle"
-        class="history-password-title"
-      >
-        対応履歴登録
-      </div>
-
-      <p class="history-password-description">
-        対応履歴を登録するため、パスワードを入力してください。
-      </p>
-
-      <label
-        for="historyPasswordInput"
-        class="history-password-label"
-      >
-        パスワード
-      </label>
-
-      <input
-        type="password"
-        id="historyPasswordInput"
-        class="history-password-input"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        placeholder="パスワードを入力"
-        autocomplete="off"
-      >
-
-      <div
-        id="historyPasswordMessage"
-        class="history-password-message"
-        aria-live="polite"
-      ></div>
-
-      <div class="history-password-button-row">
-
-        <button
-          type="button"
-          id="historyPasswordCancelButton"
-          class="history-password-cancel-button"
-        >
-          キャンセル
-        </button>
-
-        <button
-          type="button"
-          id="historyPasswordConfirmButton"
-          class="history-password-confirm-button"
-        >
-          確認して登録
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
 
   </script>
 
