@@ -1095,6 +1095,9 @@
     // 設定
     // =========================================================
 
+    // SS番号認証
+    const AUTH_API_URL =  "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/898c8c4d0d5e4fe0b6d7f0b0d493f00d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=jP98jx6YZRDDPcueo24UZ-4igkYCihSeFHiKQVi0xzU";
+    
     //車両検索
     const SEARCH_API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/10fd962b222f4bab947db7f2043a2173/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=y7tFxGxuDfJFJM4ExAF14D-DdV7Y3q7AvJzPXCgK44g";
 
@@ -1108,19 +1111,243 @@
     // DOM
     // =========================================================
 
-    const searchInput =
-      document.getElementById("searchInput");
+    const authScreen =
+  document.getElementById("authScreen");
 
-    const results =
-      document.getElementById("results");
+const mainPage =
+  document.getElementById("mainPage");
 
-    const status =
-      document.getElementById("status");
+const authPasswordInput =
+  document.getElementById("authPassword");
 
+const authButton =
+  document.getElementById("authButton");
+
+const authMessage =
+  document.getElementById("authMessage");
+
+
+const searchInput =
+  document.getElementById("searchInput");
+
+const results =
+  document.getElementById("results");
+
+const status =
+  document.getElementById("status");
+
+
+// =========================================================
+// 認証済みSS情報
+// =========================================================
+
+let authenticatedStaffSS = "";
+
+let authenticatedStaffSSDisplay = "";
 
 // =========================================================
 // Enterキーで検索
 // =========================================================
+
+    // =========================================================
+// SS番号入力
+// =========================================================
+
+authPasswordInput.addEventListener(
+  "input",
+  function () {
+
+    // 半角数字以外を削除
+    this.value =
+      this.value.replace(
+        /[^0-9]/g,
+        ""
+      );
+
+    // エラー表示を消す
+    authMessage.textContent = "";
+
+  }
+);
+
+
+// =========================================================
+// SS番号認証
+// =========================================================
+
+async function authenticateStaffSS() {
+
+  const password =
+    authPasswordInput.value.trim();
+
+
+  // 未入力
+  if (password === "") {
+
+    authMessage.textContent =
+      "SS番号を入力してください。";
+
+    authPasswordInput.focus();
+
+    return;
+
+  }
+
+
+  // 認証中
+  authButton.disabled = true;
+
+  authButton.textContent =
+    "確認中です...";
+
+  authMessage.textContent = "";
+
+
+  try {
+
+    const response =
+      await fetch(
+        AUTH_API_URL,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            password: password
+          })
+        }
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `認証HTTPエラー: ${response.status}`
+      );
+
+    }
+
+
+    const result =
+      await response.json();
+
+
+    // ========================================
+    // 認証失敗
+    // ========================================
+
+    if (result.success !== true) {
+
+      authMessage.textContent =
+        "SS番号が違います。";
+
+      authPasswordInput.value = "";
+
+      authPasswordInput.focus();
+
+      return;
+
+    }
+
+
+    // ========================================
+    // 認証成功
+    // ========================================
+
+    authenticatedStaffSS =
+      result.staffSS || "";
+
+    authenticatedStaffSSDisplay =
+      result.staffSSDisplay ||
+      result.staffSS ||
+      "";
+
+
+    // 入力したSS番号を消す
+    authPasswordInput.value = "";
+
+
+    // ログイン画面を非表示
+    authScreen.style.display =
+      "none";
+
+
+    // 車両検索画面を表示
+    mainPage.style.display =
+      "block";
+
+
+    // ページ上部へ
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  catch (error) {
+
+    console.error(
+      "SS番号認証エラー:",
+      error
+    );
+
+
+    authMessage.textContent =
+      "認証処理に失敗しました。もう一度お試しください。";
+
+  }
+
+
+  finally {
+
+    authButton.disabled = false;
+
+    authButton.textContent =
+      "ログイン";
+
+  }
+
+}
+
+
+// =========================================================
+// ログインボタン
+// =========================================================
+
+authButton.addEventListener(
+  "click",
+  function () {
+
+    authenticateStaffSS();
+
+  }
+);
+
+
+// =========================================================
+// Enterキーでもログイン
+// =========================================================
+
+authPasswordInput.addEventListener(
+  "keydown",
+  function (event) {
+
+    if (event.key === "Enter") {
+
+      event.preventDefault();
+
+      authenticateStaffSS();
+
+    }
+
+  }
+);
 
 searchInput.addEventListener("keydown", (event) => {
 
