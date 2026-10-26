@@ -586,58 +586,53 @@ async function searchVehicle(keyword) {
 
         card.innerHTML = `
 
-          <div class="registration">
-
-            ${escapeHtml(
-              record.registrationNumber
-            )}
-
-          </div>
-
-
-          <div class="info-grid">
-
-
-            <div class="label">
-              氏名
-            </div>
-
-            <div class="value">
-
-              ${escapeHtml(
-                record.name
-              )}
-
-            </div>
-
-
-            <div class="label">
-              車名
-            </div>
-
-            <div class="value">
-
-              ${escapeHtml(
-                record.carName
-              )}
-
-            </div>
-
-
-            <div class="label">
-  担当SS
-</div>
-
-<div class="value">
+<div class="registration">
 
   ${escapeHtml(
-    record.ss
+    record.registrationNumber
+  )}
+
+  <span class="registration-separator">
+    /
+  </span>
+
+  ${escapeHtml(
+    record.carName
   )}
 
 </div>
 
-          </div>
 
+<div class="info-grid">
+
+
+  <div class="label">
+    氏名
+  </div>
+
+  <div class="value">
+
+    ${escapeHtml(
+      record.name
+    )}
+
+  </div>
+
+
+  <div class="label">
+    担当SS
+  </div>
+
+  <div class="value">
+
+    ${escapeHtml(
+      record.ss
+    )}
+
+  </div>
+
+
+</div>
 
           <div class="arrow">
             ›
