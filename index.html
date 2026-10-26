@@ -406,7 +406,7 @@
     // 設定
     // =========================================================
 
-    const API_URL = "";
+    const API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/10fd962b222f4bab947db7f2043a2173/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=y7tFxGxuDfJFJM4ExAF14D-DdV7Y3q7AvJzPXCgK44g";
 
 
     // =========================================================
@@ -450,133 +450,71 @@ searchInput.addEventListener("keydown", (event) => {
 
 });
 
-    // =========================================================
-    // 車両検索
-    // =========================================================
+// =========================================================
+// 車両検索
+// =========================================================
 
-    async function searchVehicle(keyword) {
+async function searchVehicle(keyword) {
 
-      status.textContent =
-        "検索中...";
+  status.textContent = "検索中...";
+  results.innerHTML = "";
 
-      results.innerHTML = "";
+  try {
 
+    const response = await fetch(API_URL, {
 
-      try {
+      method: "POST",
 
-        /*
-        =========================================================
-        Power Automate接続後はこちらを使用
-        =========================================================
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-        const response = await fetch(API_URL, {
+      body: JSON.stringify({
+        keyword: keyword
+      })
 
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            keyword: keyword
-          })
-
-        });
+    });
 
 
-        if (!response.ok) {
+    if (!response.ok) {
 
-          throw new Error(
-            "検索に失敗しました"
-          );
-
-        }
-
-
-        const data =
-          await response.json();
-
-
-        renderResults(
-          data.records
-        );
-
-        =========================================================
-        */
-
-
-        // =====================================================
-        // 現在は動作確認用の仮データ
-        // =====================================================
-
-        const dummyRecords = [
-
-          {
-            recordId: "12345",
-            name: "山田 太郎",
-            ss: "八日市SS",
-            carName: "プリウス",
-            registrationNumber: "滋賀580あ1234"
-          },
-
-          {
-            recordId: "12346",
-            name: "田中 一郎",
-            ss: "守山SS",
-            carName: "タント",
-            registrationNumber: "滋賀501さ8123"
-          },
-
-          {
-            recordId: "12347",
-            name: "佐藤 花子",
-            ss: "近江八幡SS",
-            carName: "N-BOX",
-            registrationNumber: "滋賀330す1230"
-          }
-
-        ];
-
-
-        // =====================================================
-        // 部分一致検索
-        // =====================================================
-
-        const normalizedKeyword =
-          normalizeText(keyword);
-
-
-        const filtered =
-          dummyRecords.filter(record => {
-
-            const registrationNumber =
-              normalizeText(
-                record.registrationNumber
-              );
-
-
-            return registrationNumber.includes(
-              normalizedKeyword
-            );
-
-          });
-
-
-        renderResults(filtered);
-
-      }
-
-      catch (error) {
-
-        console.error(error);
-
-
-        status.textContent =
-          "検索中にエラーが発生しました。";
-
-      }
+      throw new Error(
+        `HTTPエラー: ${response.status}`
+      );
 
     }
+
+
+    const data =
+      await response.json();
+
+
+    console.log(
+      "Power Automateからの応答:",
+      data
+    );
+
+
+    renderResults(
+      data.records
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "検索エラー:",
+      error
+    );
+
+
+    status.textContent =
+      "検索中にエラーが発生しました。";
+
+  }
+
+}
 
 
     // =========================================================
