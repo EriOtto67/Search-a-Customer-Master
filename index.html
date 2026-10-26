@@ -2340,17 +2340,9 @@ historyCreateButton.addEventListener(
     対応日時
   </div>
 
-  <div class="form-datetime">
-
-    <div class="form-date-line">
-      ${year}年${Number(month)}月${Number(day)}日（${getJapaneseWeekday(year, month, day)}）
-    </div>
-
-    <div class="form-time-line">
-      ${Number(hour)}時${minute}分
-    </div>
-
-  </div>
+<div class="form-datetime">
+  ${year}年${Number(month)}月${Number(day)}日（${getJapaneseWeekday(year, month, day)}） ${Number(hour)}時${minute}分
+</div>
 
 </div>
 
