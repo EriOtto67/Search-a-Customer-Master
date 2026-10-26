@@ -34,6 +34,151 @@
        ヘッダー
     ============================== */
 
+    /* ==============================
+   SSログイン画面
+============================== */
+
+.auth-screen {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  padding: 100px 20px 40px;
+
+  background: #ffffff;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 30px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e2e2;
+  border-top: 5px solid #00c853;
+  border-radius: 12px;
+
+  box-shadow:
+    0 3px 12px rgba(0, 0, 0, 0.10);
+}
+
+.auth-title {
+  margin-bottom: 12px;
+
+  color: #00b84f;
+
+  font-size: 26px;
+  font-weight: 700;
+
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.auth-description {
+  margin-bottom: 24px;
+
+  color: #666666;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  text-align: center;
+}
+
+.auth-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #333333;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.auth-input {
+  width: 100%;
+  height: 50px;
+
+  padding: 10px 14px;
+
+  color: #333333;
+  background: #ffffff;
+
+  border: 1px solid #cccccc;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 17px;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.auth-input:focus {
+  border-color: #00b84f;
+
+  box-shadow:
+    0 0 0 3px rgba(0, 184, 79, 0.10);
+}
+
+.auth-message {
+  min-height: 22px;
+
+  margin-top: 8px;
+
+  color: #d93025;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+.auth-button {
+  width: 100%;
+  height: 50px;
+
+  margin-top: 10px;
+
+  color: #ffffff;
+  background: #00b84f;
+
+  border: 2px solid #00b84f;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.auth-button:hover {
+  background: #00a447;
+  border-color: #00a447;
+}
+
+.auth-button:disabled {
+  color: #ffffff;
+  background: #8bcfa8;
+  border-color: #8bcfa8;
+
+  cursor: wait;
+}
+    
     .header {
       text-align: center;
       margin-bottom: 32px;
@@ -716,6 +861,18 @@
 
 @media (max-width: 600px) {
 
+    .auth-screen {
+    padding: 50px 12px 30px;
+  }
+
+  .auth-card {
+    padding: 26px 20px;
+  }
+
+  .auth-title {
+    font-size: 23px;
+  }
+
   .container {
     width: calc(100% - 24px);
     padding: 38px 0;
@@ -819,8 +976,71 @@
 
 <body>
 
-  <main class="container">
+  <!-- =====================================================
+       SSログイン画面
+  ====================================================== -->
 
+  <div
+    id="authScreen"
+    class="auth-screen"
+  >
+
+    <div class="auth-card">
+
+      <div class="auth-title">
+        車両検索
+      </div>
+
+      <div class="auth-description">
+        SS番号を入力してログインしてください。
+      </div>
+
+      <label
+        for="authPassword"
+        class="auth-label"
+      >
+        SS番号
+      </label>
+
+      <input
+        type="password"
+        id="authPassword"
+        class="auth-input"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        placeholder="SS番号を入力"
+        autocomplete="off"
+      >
+
+      <div
+        id="authMessage"
+        class="auth-message"
+        aria-live="polite"
+      ></div>
+
+      <button
+        type="button"
+        id="authButton"
+        class="auth-button"
+      >
+        ログイン
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       車両検索画面
+  ====================================================== -->
+
+  <main
+    id="mainPage"
+    class="container"
+    style="display: none;"
+  >
+    
     <!-- ============================
          ヘッダー
     ============================= -->
