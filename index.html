@@ -1037,9 +1037,11 @@ return `
       ${escapeHtml(dateText)}
     </div>
 
-    <div class="history-content">
-      ${escapeHtml(history.content)}
-    </div>
+<div class="history-content">
+  ${escapeHtml(
+    String(history.content ?? "").trim()
+  )}
+</div>
 
     <div class="history-time">
       ${escapeHtml(timeText)}
