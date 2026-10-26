@@ -256,12 +256,6 @@
   border-bottom: none;
 }
 
-.history-date {
-  margin-bottom: 5px;
-  color: #777;
-  font-size: 13px;
-}
-
 .history-content {
   color: #333;
   font-size: 15px;
@@ -772,20 +766,13 @@ card.addEventListener(
 
           <div class="history-item">
 
-            <div class="history-date">
-              ${escapeHtml(
-                formatHistoryDate(history.date)
-              )}
-            </div>
+  <div class="history-content">
+    ${escapeHtml(
+      history.content
+    )}
+  </div>
 
-            <div class="history-content">
-              ${escapeHtml(
-                history.content
-              )}
-            </div>
-
-          </div>
-
+</div>
         `).join("");
 
 
@@ -870,37 +857,6 @@ function formatInspectionDate(value) {
 
   return `${wareki}（${seireki}）`;
 }
-
-
-// =========================================================
-// 対応日表示
-// =========================================================
-
-function formatHistoryDate(value) {
-
-  if (!value) {
-    return "";
-  }
-
-  const parts =
-    value.split("-");
-
-  if (parts.length !== 3) {
-    return value;
-  }
-
-  const year =
-    Number(parts[0]);
-
-  const month =
-    Number(parts[1]);
-
-  const day =
-    Number(parts[2]);
-
-  return `${year}年${month}月${day}日`;
-}
-
 
 // =========================================================
 // 検索文字正規化
