@@ -621,18 +621,16 @@
 /* 1行目：日付＋内容 */
 
 .history-first-line {
-  display: flex;
-  align-items: baseline;
-
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  column-gap: 18px;
+  align-items: start;
 }
 
 
 /* 日付 */
 
 .history-date {
-  flex: 0 0 220px;
-
   margin: 0;
   padding: 0;
 
@@ -640,16 +638,13 @@
 
   font-size: 16px;
   font-weight: 600;
-
-  line-height: 1.6;
+  line-height: 26px;
 }
 
 
 /* 内容 */
 
 .history-content {
-  flex: 1;
-
   min-width: 0;
 
   margin: 0;
@@ -659,8 +654,7 @@
 
   font-size: 16px;
   font-weight: 500;
-
-  line-height: 1.6;
+  line-height: 26px;
 
   white-space: pre-wrap;
 }
@@ -669,6 +663,8 @@
 /* 時刻 */
 
 .history-time {
+  width: 220px;
+
   margin: 0;
   padding: 0;
 
@@ -676,8 +672,7 @@
 
   font-size: 16px;
   font-weight: 500;
-
-  line-height: 1.6;
+  line-height: 26px;
 }
     
     .history-loading,
@@ -714,69 +709,88 @@
        スマホ
     ============================== */
 
-    @media (max-width: 600px) {
+@media (max-width: 600px) {
 
-      .container {
-        width: calc(100% - 24px);
-        padding: 38px 0;
-      }
+  .container {
+    width: calc(100% - 24px);
+    padding: 38px 0;
+  }
 
-      .title {
-        font-size: 25px;
-      }
+  .title {
+    font-size: 25px;
+  }
 
-      #searchInput {
-        height: 56px;
-        font-size: 16px;
-      }
+  #searchInput {
+    height: 56px;
+    font-size: 16px;
+  }
 
-      .search-icon {
-        top: 28px;
-      }
+  .search-icon {
+    top: 28px;
+  }
 
-      .result-card {
-        padding:
-          18px
-          45px
-          18px
-          18px;
-      }
+  .result-card {
+    padding:
+      18px
+      45px
+      18px
+      18px;
+  }
 
-      .registration {
-        font-size: 20px;
-      }
+  .registration {
+    font-size: 20px;
+  }
 
-      .history-title {
-  font-size: 20px;
+  .history-title {
+    font-size: 20px;
+  }
+
+  .action-title {
+    font-size: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 65px 1fr;
+    gap: 7px 8px;
+  }
+
+  .value {
+    font-size: 15px;
+  }
+
+  .history-content {
+    font-size: 15px;
+  }
+
+  .arrow {
+    right: 16px;
+  }
+
+  .form-two-columns {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+
+  /* 対応履歴：スマホでは縦表示 */
+
+  .history-first-line {
+    display: block;
+  }
+
+  .history-date {
+    margin-bottom: 4px;
+  }
+
+  .history-content {
+    margin-bottom: 4px;
+  }
+
+  .history-time {
+    width: auto;
+  }
+
 }
-
-      .action-title {
-  font-size: 20px;
-}
-
-      .info-grid {
-        grid-template-columns: 65px 1fr;
-        gap: 7px 8px;
-      }
-
-      .value {
-        font-size: 15px;
-      }
-
-      .history-content {
-  font-size: 15px;
-}
-      
-      .arrow {
-        right: 16px;
-      }
-
-      .form-two-columns {
-  grid-template-columns: 1fr;
-  gap: 0;
-}
-      
-    }
   </style>
 </head>
 
