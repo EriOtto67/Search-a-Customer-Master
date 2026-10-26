@@ -332,13 +332,25 @@
 
   letter-spacing: 0.02em;
 }
+    
 .form-datetime {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+
   color: #333;
 
   font-size: 16px;
   font-weight: 500;
 }
 
+.form-date,
+.form-time {
+  display: block;
+  width: 100%;
+}
+    
     /* ==============================
    2列フォーム
 ============================== */
