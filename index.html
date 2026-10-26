@@ -423,42 +423,32 @@
       document.getElementById("status");
 
 
-    // =========================================================
-    // 入力監視
-    // =========================================================
+// =========================================================
+// Enterキーで検索
+// =========================================================
 
-    let searchTimer = null;
+searchInput.addEventListener("keydown", (event) => {
 
+  if (event.key !== "Enter") {
+    return;
+  }
 
-    searchInput.addEventListener("input", () => {
+  event.preventDefault();
 
-      clearTimeout(searchTimer);
+  const keyword =
+    searchInput.value.trim();
 
+  if (!keyword) {
 
-      const keyword =
-        searchInput.value.trim();
+    results.innerHTML = "";
+    status.textContent = "";
 
+    return;
+  }
 
-      // 入力が空なら結果を消す
-      if (!keyword) {
+  searchVehicle(keyword);
 
-        results.innerHTML = "";
-        status.textContent = "";
-
-        return;
-
-      }
-
-
-      // 連続入力のたび通信しないよう300ms待つ
-      searchTimer = setTimeout(() => {
-
-        searchVehicle(keyword);
-
-      }, 300);
-
-    });
-
+});
 
     // =========================================================
     // 車両検索
