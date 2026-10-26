@@ -305,6 +305,140 @@
 }
 
     /* ==============================
+   対応履歴作成フォーム
+============================== */
+
+.history-create-form {
+  margin-top: 22px;
+  padding-top: 22px;
+  padding-bottom: 22px;
+
+  border-top: 1px solid #e2e2e2;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.form-row {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #888;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.form-datetime {
+  color: #333;
+
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.form-options {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 12px 22px;
+}
+
+.form-options label {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #333;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.form-options input {
+  width: 18px;
+  height: 18px;
+
+  accent-color: #00b84f;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+
+  padding: 10px 12px;
+
+  color: #333;
+  background: #ffffff;
+
+  border: 1px solid #d5d5d5;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 16px;
+
+  outline: none;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #00b84f;
+
+  box-shadow:
+    0 0 0 3px rgba(0, 184, 79, 0.10);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+.form-cancel-button,
+.form-submit-button {
+  padding: 10px 22px;
+
+  border-radius: 7px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.form-cancel-button {
+  color: #666;
+  background: #ffffff;
+
+  border: 1px solid #cccccc;
+}
+
+.form-submit-button {
+  color: #ffffff;
+  background: #00b84f;
+
+  border: 2px solid #00b84f;
+}
+
+.form-submit-button:hover {
+  background: #00a447;
+  border-color: #00a447;
+}
+
+    /* ==============================
    対応履歴
 ============================== */
 
@@ -508,6 +642,9 @@
 
     // 対応履歴取得
     const HISTORY_API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/15/workflows/8e2c8217ed224cf39c19df016ace6f73/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=u4ZWV2byxn9qOV8sLU4RII0MBRn1HMYaw-Ff7gv7rfQ";
+
+    // 対応履歴登録
+    const HISTORY_CREATE_API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/16/workflows/72e5f493229145af802abe15c29eef53/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FmKezmthhBdyE5Y3Z-7nZ3sRsvC_FKeDf-e8Hghsous";
     
     // =========================================================
     // DOM
@@ -893,14 +1030,12 @@ loading.innerHTML = `
   顧客マスタ確認
 </a>
 
-<a
-  href="${`https://ogakame.cybozu.com/k/261/edit?vehicleId=${encodeURIComponent(recordId)}`}"
-  target="_blank"
-  rel="noopener noreferrer"
-  class="action-button"
+<button
+  type="button"
+  class="action-button history-create-button"
 >
   対応履歴作成
-</a>
+</button>
 
 ${record.lineTalkUrl
   ? `
@@ -938,6 +1073,419 @@ ${record.lineTalkUrl
   </div>
 
 `;
+
+      // =====================================================
+// 対応履歴作成ボタン
+// =====================================================
+
+const historyCreateButton =
+  loading.querySelector(".history-create-button");
+
+historyCreateButton.addEventListener(
+  "click",
+  (event) => {
+
+    // カードの開閉イベントへ伝播させない
+    event.stopPropagation();
+
+
+    // すでにフォームがあれば閉じる
+    const existingForm =
+      loading.querySelector(".history-create-form");
+
+    if (existingForm) {
+
+      existingForm.remove();
+
+      return;
+
+    }
+
+
+    // フォームを開いた瞬間の日時を取得
+    const now =
+      new Date();
+
+    const year =
+      now.getFullYear();
+
+    const month =
+      String(now.getMonth() + 1).padStart(2, "0");
+
+    const day =
+      String(now.getDate()).padStart(2, "0");
+
+    const hour =
+      String(now.getHours()).padStart(2, "0");
+
+    const minute =
+      String(now.getMinutes()).padStart(2, "0");
+
+
+    const date =
+      `${year}-${month}-${day}`;
+
+    const time =
+      `${hour}:${minute}`;
+
+
+    // フォーム作成
+    const form =
+      document.createElement("div");
+
+    form.className =
+      "history-create-form";
+
+    form.dataset.date =
+      date;
+
+    form.dataset.time =
+      time;
+
+
+    form.innerHTML = `
+
+      <div class="history-title">
+        対応履歴作成
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-label">
+          対応日時
+        </div>
+
+        <div class="form-datetime">
+          ${year}年${Number(month)}月${Number(day)}日
+          ${hour}:${minute}
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-label">
+          対応種別
+        </div>
+
+        <div class="form-options">
+
+          <label>
+            <input
+              type="checkbox"
+              name="history-type"
+              value="車検"
+            >
+            車検
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              name="history-type"
+              value="車販"
+            >
+            車販
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-label">
+          アプローチ内容
+        </div>
+
+        <div class="form-options">
+
+          <label>
+            <input
+              type="checkbox"
+              name="history-approach"
+              value="TELアポ"
+            >
+            TELアポ
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              name="history-approach"
+              value="TEL不在"
+            >
+            TEL不在
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <label
+          class="form-label"
+          for="history-staff-${recordId}"
+        >
+          対応担当
+        </label>
+
+        <input
+          id="history-staff-${recordId}"
+          type="text"
+          class="form-input history-staff"
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <div class="form-row">
+
+        <label
+          class="form-label"
+          for="history-content-${recordId}"
+        >
+          対応内容
+        </label>
+
+        <textarea
+          id="history-content-${recordId}"
+          class="form-textarea history-content-input"
+          rows="4"
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="form-cancel-button"
+        >
+          キャンセル
+        </button>
+
+        <button
+          type="button"
+          class="form-submit-button"
+        >
+          登録する
+        </button>
+
+      </div>
+
+    `;
+
+
+    // 各種ボタンと対応履歴の間へ挿入
+    const historyTitle =
+      loading.querySelector(".history-title");
+
+    historyTitle.before(form);
+
+
+    // キャンセル
+    form
+      .querySelector(".form-cancel-button")
+      .addEventListener(
+        "click",
+        (event) => {
+
+          event.stopPropagation();
+
+          form.remove();
+
+        }
+      );
+
+    // =====================================================
+// 登録する
+// =====================================================
+
+form
+  .querySelector(".form-submit-button")
+  .addEventListener(
+    "click",
+    async (event) => {
+
+      event.stopPropagation();
+
+
+      // 対応種別
+      const types =
+        Array.from(
+          form.querySelectorAll(
+            'input[name="history-type"]:checked'
+          )
+        ).map(input => input.value);
+
+
+      // アプローチ内容
+      const approaches =
+        Array.from(
+          form.querySelectorAll(
+            'input[name="history-approach"]:checked'
+          )
+        ).map(input => input.value);
+
+
+      // 対応担当
+      const staff =
+        form
+          .querySelector(".history-staff")
+          .value
+          .trim();
+
+
+      // 対応内容
+      const content =
+        form
+          .querySelector(".history-content-input")
+          .value
+          .trim();
+
+
+      // フォームを開いた瞬間に保持した日時
+      const date =
+        form.dataset.date;
+
+      const time =
+        form.dataset.time;
+
+
+      // 必須チェック
+      if (types.length === 0) {
+
+        alert("対応種別を選択してください。");
+
+        return;
+
+      }
+
+
+      const submitButton =
+        form.querySelector(".form-submit-button");
+
+
+      // 二重登録防止
+      submitButton.disabled = true;
+      submitButton.textContent = "登録中...";
+
+
+      try {
+
+        const response =
+          await fetch(
+            HISTORY_CREATE_API_URL,
+            {
+
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json"
+              },
+
+              body: JSON.stringify({
+
+                vehicleId: recordId,
+
+                date: date,
+
+                time: time,
+
+                types: types,
+
+                approaches: approaches,
+
+                staff: staff,
+
+                content: content
+
+              })
+
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            `HTTPエラー: ${response.status}`
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        console.log(
+          "対応履歴登録結果:",
+          data
+        );
+
+
+        if (!data.success) {
+
+          throw new Error(
+            "登録結果が正常ではありません。"
+          );
+
+        }
+
+
+        alert(
+          "対応履歴を登録しました。"
+        );
+
+
+        // 登録フォームを閉じる
+        form.remove();
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "対応履歴登録エラー:",
+          error
+        );
+
+
+        alert(
+          "対応履歴の登録に失敗しました。"
+        );
+
+
+        // 再度押せるように戻す
+        submitButton.disabled = false;
+        submitButton.textContent = "登録する";
+
+      }
+
+    }
+  );
+
+    // フォーム内クリックでカードを閉じない
+    form.addEventListener(
+      "click",
+      (event) => {
+
+        event.stopPropagation();
+
+      }
+    );
+
+  }
+);
       
     }
 
