@@ -991,27 +991,23 @@
         車両検索
       </div>
 
-      <div class="auth-description">
-        SS番号を入力してログインしてください。
-      </div>
+<label
+  for="authPassword"
+  class="auth-label"
+>
+  パスワード
+</label>
 
-      <label
-        for="authPassword"
-        class="auth-label"
-      >
-        SS番号
-      </label>
-
-      <input
-        type="password"
-        id="authPassword"
-        class="auth-input"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        placeholder="SS番号を入力"
-        autocomplete="off"
-      >
-
+<input
+  type="password"
+  id="authPassword"
+  class="auth-input"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  placeholder="パスワードを入力"
+  autocomplete="off"
+>
+      
       <div
         id="authMessage"
         class="auth-message"
@@ -1150,7 +1146,7 @@ let authenticatedStaffSSDisplay = "";
 // =========================================================
 
     // =========================================================
-// SS番号入力
+// パスワード入力
 // =========================================================
 
 authPasswordInput.addEventListener(
@@ -1172,7 +1168,7 @@ authPasswordInput.addEventListener(
 
 
 // =========================================================
-// SS番号認証
+// パスワード認証
 // =========================================================
 
 async function authenticateStaffSS() {
@@ -1184,9 +1180,9 @@ async function authenticateStaffSS() {
   // 未入力
   if (password === "") {
 
-    authMessage.textContent =
-      "SS番号を入力してください。";
-
+authMessage.textContent =
+  "パスワードを入力してください。";
+    
     authPasswordInput.focus();
 
     return;
@@ -1242,9 +1238,9 @@ async function authenticateStaffSS() {
 
     if (result.success !== true) {
 
-      authMessage.textContent =
-        "SS番号が違います。";
-
+authMessage.textContent =
+  "パスワードが違います。";
+      
       authPasswordInput.value = "";
 
       authPasswordInput.focus();
