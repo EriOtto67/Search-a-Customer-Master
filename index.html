@@ -477,6 +477,44 @@
 
   letter-spacing: 0.02em;
 }
+
+    .form-required {
+
+      .form-error-message {
+  display: none;
+
+  margin-top: 7px;
+
+  color: #d93025;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  line-height: 1.5;
+}
+
+.form-error-message.is-visible {
+  display: block;
+}
+
+.form-error {
+  border-color: #d93025 !important;
+
+  box-shadow:
+    0 0 0 3px rgba(217, 48, 37, 0.10) !important;
+}
+      
+  display: inline-block;
+
+  margin-left: 6px;
+
+  color: #e74c3c;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  vertical-align: middle;
+}
     
 .form-datetime {
   color: #333;
@@ -2324,6 +2362,7 @@ historyCreateButton.addEventListener(
 
     <div class="form-label">
       対応種別
+        <span class="form-required">必須</span>
     </div>
 
     <div class="multi-select">
@@ -2365,6 +2404,12 @@ historyCreateButton.addEventListener(
 
     </div>
 
+    <div
+      class="form-error-message history-type-error"
+    >
+      対応種別を選択してください。
+    </div>
+
   </div>
 
 
@@ -2373,6 +2418,7 @@ historyCreateButton.addEventListener(
 
     <div class="form-label">
       アプローチ内容
+        <span class="form-required">必須</span>
     </div>
 
     <div class="multi-select">
@@ -2410,8 +2456,14 @@ historyCreateButton.addEventListener(
           TEL不在
         </label>
 
-      </div>
+            </div>
 
+    </div>
+
+    <div
+      class="form-error-message history-approach-error"
+    >
+      アプローチ内容を選択してください。
     </div>
 
   </div>
@@ -2425,6 +2477,7 @@ historyCreateButton.addEventListener(
           for="history-staff-${recordId}"
         >
           対応担当
+            <span class="form-required">必須</span>
         </label>
 
         <input
@@ -2434,8 +2487,13 @@ historyCreateButton.addEventListener(
           autocomplete="off"
         >
 
-      </div>
+        <div
+          class="form-error-message history-staff-error"
+        >
+          対応担当を入力してください。
+        </div>
 
+      </div>
 
       <div class="form-row">
 
@@ -2533,45 +2591,131 @@ form
     // 選択した内容をボタンに表示
     checkboxes.forEach(checkbox => {
 
-      checkbox.addEventListener(
-        "change",
-        () => {
+checkbox.addEventListener(
+  "change",
+  () => {
 
-          const selected =
-            Array.from(checkboxes)
-              .filter(checkbox => checkbox.checked)
-              .map(checkbox => checkbox.value);
+    const selected =
+      Array.from(checkboxes)
+        .filter(
+          checkbox =>
+            checkbox.checked
+        )
+        .map(
+          checkbox =>
+            checkbox.value
+        );
 
-          text.textContent =
-            selected.length > 0
-              ? selected.join("、")
-              : "選択してください";
 
-        }
-      );
+    text.textContent =
+      selected.length > 0
+        ? selected.join("、")
+        : "選択してください";
 
+
+    // 選択されたらエラー表示を消す
+
+    if (selected.length > 0) {
+
+      multiSelect
+        .querySelector(
+          ".multi-select-button"
+        )
+        .classList.remove(
+          "form-error"
+        );
+
+
+      const errorMessage =
+        multiSelect
+          .closest(".form-row")
+          .querySelector(
+            ".form-error-message"
+          );
+
+
+      if (errorMessage) {
+
+        errorMessage.classList.remove(
+          "is-visible"
+        );
+
+      }
+
+    }
+
+  }
+);
+      
     });
 
   });
 
-    // キャンセル
-    form
-      .querySelector(".form-cancel-button")
-      .addEventListener(
-        "click",
-        (event) => {
+// =====================================================
+// 対応担当
+// 入力されたらエラーを消す
+// =====================================================
 
-          event.stopPropagation();
+const historyStaffInput =
+  form.querySelector(
+    ".history-staff"
+  );
 
-          form.remove();
+historyStaffInput.addEventListener(
+  "input",
+  function () {
 
-        }
+    if (this.value.trim() === "") {
+
+      return;
+
+    }
+
+
+    this.classList.remove(
+      "form-error"
+    );
+
+
+    const staffErrorMessage =
+      form.querySelector(
+        ".history-staff-error"
       );
+
+
+    if (staffErrorMessage) {
+
+      staffErrorMessage.classList.remove(
+        "is-visible"
+      );
+
+    }
+
+  }
+);
+
+
+// =====================================================
+// キャンセル
+// =====================================================
+
+form
+  .querySelector(".form-cancel-button")
+  .addEventListener(
+    "click",
+    (event) => {
+
+      event.stopPropagation();
+
+      form.remove();
+
+    }
+  );
+
 
 // =====================================================
 // 登録する
 // =====================================================
-
 form
   .querySelector(".form-submit-button")
   .addEventListener(
@@ -2623,18 +2767,192 @@ form
         form.dataset.time;
 
 
-      // 対応種別の必須チェック
-      if (types.length === 0) {
+// =====================================================
+// 必須チェック
+// =====================================================
 
-        alert(
-          "対応種別を選択してください。"
-        );
+const typeError =
+  form.querySelector(
+    ".history-type-error"
+  );
 
-        return;
+const approachError =
+  form.querySelector(
+    ".history-approach-error"
+  );
 
-      }
+const staffError =
+  form.querySelector(
+    ".history-staff-error"
+  );
+
+const staffInput =
+  form.querySelector(
+    ".history-staff"
+  );
+
+const typeSelect =
+  form
+    .querySelector(
+      'input[name="history-type"]'
+    )
+    .closest(".multi-select");
+
+const approachSelect =
+  form
+    .querySelector(
+      'input[name="history-approach"]'
+    )
+    .closest(".multi-select");
 
 
+// 前回のエラーを一旦消す
+
+typeError.classList.remove(
+  "is-visible"
+);
+
+approachError.classList.remove(
+  "is-visible"
+);
+
+staffError.classList.remove(
+  "is-visible"
+);
+
+typeSelect
+  .querySelector(".multi-select-button")
+  .classList.remove(
+    "form-error"
+  );
+
+approachSelect
+  .querySelector(".multi-select-button")
+  .classList.remove(
+    "form-error"
+  );
+
+staffInput.classList.remove(
+  "form-error"
+);
+
+
+// エラー有無
+
+let hasError = false;
+
+
+// 対応種別
+
+if (types.length === 0) {
+
+  typeError.classList.add(
+    "is-visible"
+  );
+
+  typeSelect
+    .querySelector(".multi-select-button")
+    .classList.add(
+      "form-error"
+    );
+
+  hasError = true;
+
+}
+
+
+// アプローチ内容
+
+if (approaches.length === 0) {
+
+  approachError.classList.add(
+    "is-visible"
+  );
+
+  approachSelect
+    .querySelector(".multi-select-button")
+    .classList.add(
+      "form-error"
+    );
+
+  hasError = true;
+
+}
+
+
+// 対応担当
+
+if (staff === "") {
+
+  staffError.classList.add(
+    "is-visible"
+  );
+
+  staffInput.classList.add(
+    "form-error"
+  );
+
+  hasError = true;
+
+}
+
+
+// 1つでも未入力なら登録しない
+
+if (hasError) {
+
+  let firstErrorElement = null;
+
+
+  if (types.length === 0) {
+
+    firstErrorElement =
+      typeSelect.querySelector(
+        ".multi-select-button"
+      );
+
+  }
+
+  else if (approaches.length === 0) {
+
+    firstErrorElement =
+      approachSelect.querySelector(
+        ".multi-select-button"
+      );
+
+  }
+
+  else if (staff === "") {
+
+    firstErrorElement =
+      staffInput;
+
+  }
+
+
+  if (firstErrorElement) {
+
+    firstErrorElement.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+
+    setTimeout(
+      function () {
+
+        firstErrorElement.focus();
+
+      },
+      300
+    );
+
+  }
+
+
+  return;
+
+}      
       // =====================================================
       // パスワード認証
       // =====================================================
