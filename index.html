@@ -2244,24 +2244,39 @@ return `
 
 <div class="customer-badges">
 
-  <div class="customer-badge ${record.salesCustomer === true ? "active" : ""}">
-  車販
-</div>
+  <div class="customer-badge ${
+    String(record.salesCustomer).toLowerCase() === "true"
+      ? "active"
+      : ""
+  }">
+    車販
+  </div>
 
-<div class="customer-badge">
-  車検
-</div>
+  <div class="customer-badge ${
+    String(record.inspectionCustomer).toLowerCase() === "true"
+      ? "active"
+      : ""
+  }">
+    車検
+  </div>
 
-<div class="customer-badge">
-  作業
-</div>
+  <div class="customer-badge ${
+    String(record.workCustomer).toLowerCase() === "true"
+      ? "active"
+      : ""
+  }">
+    作業
+  </div>
 
-<div class="customer-badge">
-  KeePer
-</div>
+  <div class="customer-badge ${
+    String(record.keeperCustomer).toLowerCase() === "true"
+      ? "active"
+      : ""
+  }">
+    KeePer
+  </div>
 
 </div>
-
 
 <div class="arrow">
   ›
