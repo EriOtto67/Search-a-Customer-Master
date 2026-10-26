@@ -1223,21 +1223,8 @@ card.appendChild(loading);
 
 
       // 履歴HTML作成
-      const historyHtml =
-        histories.map(history => `
-
-          <div class="history-item">
-
-  <div class="history-content">
-    ${escapeHtml(
-      history.content
-    )}
-    
-  </div>
-
-</div>
-        `).join("");
-
+const historyHtml =
+  createHistoryHtml(histories);
 
 loading.innerHTML = `
 
