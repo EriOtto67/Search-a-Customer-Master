@@ -609,7 +609,14 @@
 }
 
 .history-item {
-  padding: 12px 0;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 18px;
+
+  align-items: start;
+
+  padding: 18px 0;
+
   border-bottom: 1px solid #eeeeee;
 }
 
@@ -617,7 +624,11 @@
   border-bottom: none;
 }
 
-    .history-date {
+.history-datetime {
+  min-width: 0;
+}
+
+.history-date {
   color: #333;
 
   font-size: 16px;
@@ -627,8 +638,6 @@
 }
 
 .history-time {
-  margin-bottom: 6px;
-
   color: #333;
 
   font-size: 16px;
@@ -636,17 +645,21 @@
 
   line-height: 1.6;
 }
-    
+
 .history-content {
+  min-width: 0;
+
+  padding-top: 1px;
+
   color: #333;
 
   font-size: 16px;
   font-weight: 500;
 
   line-height: 1.6;
+
   white-space: pre-wrap;
 }
-
 .history-loading,
 .history-empty {
   color: #777;
@@ -989,24 +1002,28 @@ function createHistoryHtml(histories) {
 
     return `
 
-      <div class="history-item">
+  <div class="history-item">
 
-        <div class="history-date">
-          ${escapeHtml(dateText)}
-        </div>
+    <div class="history-datetime">
 
-        <div class="history-time">
-          ${escapeHtml(timeText)}
-        </div>
-
-        <div class="history-content">
-          ${escapeHtml(history.content)}
-        </div>
-
+      <div class="history-date">
+        ${escapeHtml(dateText)}
       </div>
 
-    `;
+      <div class="history-time">
+        ${escapeHtml(timeText)}
+      </div>
 
+    </div>
+
+    <div class="history-content">
+      ${escapeHtml(history.content)}
+    </div>
+
+  </div>
+
+`;
+    
   }).join("");
 
 }
