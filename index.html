@@ -609,7 +609,13 @@
 }
 
 .history-item {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  column-gap: 18px;
+  align-items: start;
+
   padding: 18px 0;
+
   border-bottom: 1px solid #eeeeee;
 }
 
@@ -618,21 +624,17 @@
 }
 
 
-/* 1行目：日付＋内容 */
+/* 左側：日付＋時刻 */
 
-.history-first-line {
-  display: flex;
-  align-items: flex-start;
-
-  gap: 18px;
+.history-datetime {
+  margin: 0;
+  padding: 0;
 }
 
 
 /* 日付 */
 
 .history-date {
-  flex: 0 0 220px;
-
   margin: 0;
   padding: 0;
 
@@ -641,14 +643,28 @@
   font-size: 16px;
   font-weight: 600;
 
-  line-height: 26px;
+  line-height: 22px;
 }
 
 
-/* 内容 */
+/* 時刻 */
+
+.history-time {
+  margin: 2px 0 0 0;
+  padding: 0;
+
+  color: #333;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  line-height: 22px;
+}
+
+
+/* 右側：対応内容 */
 
 .history-content {
-  flex: 1;
   min-width: 0;
 
   margin: 0;
@@ -659,26 +675,9 @@
   font-size: 16px;
   font-weight: 500;
 
-  line-height: 26px;
+  line-height: 22px;
 
   white-space: pre-wrap;
-}
-
-
-/* 時刻 */
-
-.history-time {
-  width: 220px;
-
-  margin: 0;
-  padding: 0;
-
-  color: #333;
-
-  font-size: 16px;
-  font-weight: 500;
-
-  line-height: 26px;
 }
     
     .history-loading,
@@ -764,10 +763,6 @@
     font-size: 15px;
   }
 
-  .history-content {
-    font-size: 15px;
-  }
-
   .arrow {
     right: 16px;
   }
@@ -778,25 +773,46 @@
   }
 
 
-  /* 対応履歴：スマホでは縦表示 */
+  /* ==============================
+     対応履歴
+  ============================== */
 
-  .history-first-line {
-    display: block;
+  .history-item {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+  }
+
+  .history-datetime {
+    margin: 0;
+    padding: 0;
   }
 
   .history-date {
-    margin-bottom: 4px;
-  }
+    margin: 0;
+    padding: 0;
 
-  .history-content {
-    margin-bottom: 4px;
+    font-size: 15px;
+    line-height: 22px;
   }
 
   .history-time {
-    width: auto;
+    margin: 2px 0 0 0;
+    padding: 0;
+
+    font-size: 15px;
+    line-height: 22px;
+  }
+
+  .history-content {
+    margin: 0;
+    padding: 0;
+
+    font-size: 15px;
+    line-height: 22px;
   }
 
 }
+
   </style>
 </head>
 
@@ -1044,19 +1060,21 @@ return `
 
   <div class="history-item">
 
-    <div class="history-first-line">
+    <div class="history-datetime">
 
       <div class="history-date">
         ${escapeHtml(dateText)}
       </div>
 
-<div class="history-content">${escapeHtml(String(history.content ?? "").trim())}</div>
+      <div class="history-time">
+        ${escapeHtml(timeText)}
+      </div>
 
     </div>
 
-    <div class="history-time">
-      ${escapeHtml(timeText)}
-    </div>
+    <div class="history-content">${escapeHtml(
+      String(history.content ?? "").trim()
+    )}</div>
 
   </div>
 
