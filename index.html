@@ -389,7 +389,77 @@
   padding-bottom: 22px;
   border-bottom: 1px solid #e2e2e2;
 }
-    
+
+
+/* ==============================
+   帳票作成ボタン
+============================== */
+
+.document-action-section {
+  margin-top: 22px;
+  padding-bottom: 22px;
+
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.document-action-title {
+  margin-bottom: 16px;
+
+  color: #00b84f;
+
+  font-size: 23px;
+  font-weight: 700;
+
+  letter-spacing: 0.03em;
+}
+
+.document-action-buttons {
+  display: flex;
+
+  gap: 10px;
+
+  margin: 0;
+}
+
+.document-action-button {
+  flex: 1;
+
+  min-height: 48px;
+
+  padding: 10px 8px;
+
+  color: #00b84f;
+  background: #ffffff;
+
+  border: 2px solid #00b84f;
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+
+  line-height: 1.4;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    transform 0.15s;
+}
+
+.document-action-button:hover {
+  color: #ffffff;
+  background: #00b84f;
+
+  transform: translateY(-1px);
+}
+
+.document-action-button:active {
+  transform: translateY(0);
+}    
 .action-buttons {
   display: flex;
   gap: 10px;
@@ -3463,16 +3533,99 @@ if (hasError) {
         );
 
 
-        // 登録フォームを閉じる
-        form.remove();
+// 登録フォームを閉じる
+form.remove();
 
 
-        // 最新の対応履歴を再取得
-        const latestHistories =
-          await fetchHistories(
-            recordId
-          );
+// =====================================================
+// 帳票作成ボタンを表示
+// =====================================================
 
+// すでに表示されている場合は重複させない
+const existingDocumentSection =
+  loading.querySelector(
+    ".document-action-section"
+  );
+
+if (existingDocumentSection) {
+
+  existingDocumentSection.remove();
+
+}
+
+
+// 帳票作成エリア
+const documentSection =
+  document.createElement("div");
+
+documentSection.className =
+  "document-action-section";
+
+
+documentSection.innerHTML = `
+
+  <div class="document-action-title">
+    帳票作成ボタン
+  </div>
+
+  <div class="document-action-buttons">
+
+    <button
+      type="button"
+      class="document-action-button es-create-button"
+    >
+      ES作成
+    </button>
+
+    <button
+      type="button"
+      class="document-action-button car-sheet-create-button"
+    >
+      愛車シート作成
+    </button>
+
+    <button
+      type="button"
+      class="document-action-button insurance-policy-create-button"
+    >
+      保険対応方針シート作成
+    </button>
+
+  </div>
+
+`;
+
+
+// 対応履歴タイトルを取得
+const documentInsertPosition =
+  loading.querySelector(
+    ".history-title"
+  );
+
+
+// 対応履歴の上へ挿入
+documentInsertPosition.before(
+  documentSection
+);
+
+
+// 帳票作成ボタン内をクリックしても
+// 車両カードを閉じない
+documentSection.addEventListener(
+  "click",
+  (event) => {
+
+    event.stopPropagation();
+
+  }
+);
+
+
+// 最新の対応履歴を再取得
+const latestHistories =
+  await fetchHistories(
+    recordId
+  );
 
         // 対応履歴一覧を更新
         const historyList =
