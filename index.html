@@ -848,8 +848,7 @@
   display: none;
 
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
 
   z-index: 1000;
 
@@ -872,75 +871,86 @@
 
 .history-password-modal {
   width: 100%;
-  max-width: 420px;
+  max-width: 550px;
 
-  padding: 26px;
+  padding: 38px 34px 34px;
 
   background-color: #ffffff;
 
   border-top: 5px solid #00c853;
-  border-radius: 12px;
+  border-radius: 15px;
 
   box-shadow:
-    0 8px 26px rgba(0, 0, 0, 0.28);
+    0 10px 30px rgba(0, 0, 0, 0.30);
 }
 
 .history-password-title {
-  margin: 0 0 12px;
+  margin: 0 0 24px;
 
   color: #00b84f;
 
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
+
+  line-height: 1.4;
 }
 
 .history-password-description {
-  margin: 0 0 20px;
+  margin: 0 0 28px;
 
-  color: #555555;
+  color: #666666;
 
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 18px;
+  font-weight: 400;
+
+  line-height: 1.7;
 }
 
 .history-password-label {
   display: block;
 
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 
   color: #333333;
 
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
 }
 
 .history-password-input {
   width: 100%;
-  height: 48px;
+  height: 64px;
 
-  padding: 10px 12px;
+  padding: 0 16px;
 
   color: #333333;
   background-color: #ffffff;
 
-  border: 1px solid #cccccc;
-  border-radius: 7px;
+  border: 1px solid #00c853;
+  border-radius: 9px;
 
   font-family: inherit;
-  font-size: 16px;
+  font-size: 19px;
 
   outline: none;
+
+  box-shadow:
+    0 0 0 2px rgba(0, 200, 83, 0.08);
+}
+
+.history-password-input::placeholder {
+  color: #888888;
 }
 
 .history-password-input:focus {
-  border-color: #00b84f;
+  border-color: #00c853;
 
   box-shadow:
-    0 0 0 3px rgba(0, 184, 79, 0.10);
+    0 0 0 3px rgba(0, 200, 83, 0.12);
 }
 
 .history-password-message {
-  min-height: 20px;
+  min-height: 22px;
 
   margin-top: 8px;
 
@@ -950,43 +960,61 @@
   line-height: 1.5;
 }
 
+.history-password-message:empty {
+  display: none;
+}
+
 .history-password-button-row {
   display: flex;
 
-  gap: 10px;
+  gap: 12px;
 
-  margin-top: 20px;
+  margin-top: 26px;
 }
 
 .history-password-button-row button {
   flex: 1;
 
   width: auto;
-  margin-top: 0;
+  height: 64px;
+
+  margin: 0;
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+
+  cursor: pointer;
 }
 
 .history-password-cancel-button {
   color: #ffffff;
-  background-color: #777777;
-
-  border-color: #777777;
+  background-color: #808080;
 }
 
 .history-password-cancel-button:hover {
+  background-color: #707070;
+}
+
+.history-password-cancel-button:active {
   background-color: #666666;
-  border-color: #666666;
 }
 
 .history-password-confirm-button {
   color: #ffffff;
   background-color: #00b84f;
-
-  border-color: #00b84f;
 }
 
 .history-password-confirm-button:hover {
-  background-color: #00a447;
-  border-color: #00a447;
+  background-color: #00a847;
+}
+
+.history-password-confirm-button:active {
+  background-color: #008f3c;
 }
     
     .no-result {
