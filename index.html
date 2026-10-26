@@ -610,28 +610,37 @@
 
 .history-item {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  column-gap: 18px;
 
-  align-items: start;
+  grid-template-columns:
+    220px
+    minmax(0, 1fr);
+
+  grid-template-rows:
+    auto
+    auto;
+
+  column-gap: 18px;
+  row-gap: 0;
 
   padding: 18px 0;
 
   border-bottom: 1px solid #eeeeee;
 }
-    
+
 .history-item:last-child {
   border-bottom: none;
 }
 
-.history-datetime {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  align-self: start;
-}
+
+/* 日付：左上 */
 
 .history-date {
+  grid-column: 1;
+  grid-row: 1;
+
+  margin: 0;
+  padding: 0;
+
   color: #333;
 
   font-size: 16px;
@@ -640,7 +649,16 @@
   line-height: 1.6;
 }
 
+
+/* 時刻：左下 */
+
 .history-time {
+  grid-column: 1;
+  grid-row: 2;
+
+  margin: 0;
+  padding: 0;
+
   color: #333;
 
   font-size: 16px;
@@ -649,13 +667,17 @@
   line-height: 1.6;
 }
 
+
+/* 内容：右上 */
+
 .history-content {
-  min-width: 0;
+  grid-column: 2;
+  grid-row: 1;
 
   margin: 0;
   padding: 0;
 
-  align-self: start;
+  min-width: 0;
 
   color: #333;
 
@@ -1007,30 +1029,26 @@ function createHistoryHtml(histories) {
       formatHistoryTime(history.time);
 
 
-    return `
+return `
 
   <div class="history-item">
 
-    <div class="history-datetime">
-
-      <div class="history-date">
-        ${escapeHtml(dateText)}
-      </div>
-
-      <div class="history-time">
-        ${escapeHtml(timeText)}
-      </div>
-
+    <div class="history-date">
+      ${escapeHtml(dateText)}
     </div>
 
     <div class="history-content">
       ${escapeHtml(history.content)}
     </div>
 
+    <div class="history-time">
+      ${escapeHtml(timeText)}
+    </div>
+
   </div>
 
 `;
-    
+
   }).join("");
 
 }
