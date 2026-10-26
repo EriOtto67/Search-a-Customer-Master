@@ -621,16 +621,18 @@
 /* 1行目：日付＋内容 */
 
 .history-first-line {
-  display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  column-gap: 18px;
-  align-items: start;
+  display: flex;
+  align-items: flex-start;
+
+  gap: 18px;
 }
 
 
 /* 日付 */
 
 .history-date {
+  flex: 0 0 220px;
+
   margin: 0;
   padding: 0;
 
@@ -638,6 +640,7 @@
 
   font-size: 16px;
   font-weight: 600;
+
   line-height: 26px;
 }
 
@@ -645,6 +648,7 @@
 /* 内容 */
 
 .history-content {
+  flex: 1;
   min-width: 0;
 
   margin: 0;
@@ -654,6 +658,7 @@
 
   font-size: 16px;
   font-weight: 500;
+
   line-height: 26px;
 
   white-space: pre-wrap;
@@ -672,6 +677,7 @@
 
   font-size: 16px;
   font-weight: 500;
+
   line-height: 26px;
 }
     
