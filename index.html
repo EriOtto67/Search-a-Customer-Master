@@ -2258,13 +2258,37 @@ ${record.lineTalkUrl
 
 `;
 
-      // =====================================================
+// =====================================================
+// 各種ボタン
+// カードの開閉イベントへ伝播させない
+// =====================================================
+
+loading
+  .querySelectorAll(
+    ".action-buttons a"
+  )
+  .forEach(
+    link => {
+
+      link.addEventListener(
+        "click",
+        event => {
+
+          event.stopPropagation();
+
+        }
+      );
+
+    }
+  );
+
+
+// =====================================================
 // 対応履歴作成ボタン
 // =====================================================
 
 const historyCreateButton =
   loading.querySelector(".history-create-button");
-
 historyCreateButton.addEventListener(
   "click",
   (event) => {
