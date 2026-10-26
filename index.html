@@ -607,6 +607,32 @@ async function searchVehicle(keyword) {
 
 
   <div class="label">
+    担当SS
+  </div>
+
+  <div class="value">
+
+    ${escapeHtml(
+      record.ss
+    )}
+
+  </div>
+
+
+  <div class="label">
+    属性
+  </div>
+
+  <div class="value">
+
+    ${escapeHtml(
+      record.attribute
+    )}
+
+  </div>
+
+
+  <div class="label">
     氏名
   </div>
 
@@ -620,20 +646,19 @@ async function searchVehicle(keyword) {
 
 
   <div class="label">
-    担当SS
+    車検満了日
   </div>
 
   <div class="value">
 
     ${escapeHtml(
-      record.ss
+      record.inspectionDate
     )}
 
   </div>
 
 
 </div>
-
           <div class="arrow">
             ›
           </div>
