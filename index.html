@@ -617,6 +617,26 @@
   border-bottom: none;
 }
 
+    .history-date {
+  color: #333;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  line-height: 1.6;
+}
+
+.history-time {
+  margin-bottom: 6px;
+
+  color: #333;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  line-height: 1.6;
+}
+    
 .history-content {
   color: #333;
 
@@ -958,22 +978,39 @@ function createHistoryHtml(histories) {
   }
 
 
-  return histories.map(history => `
+  return histories.map(history => {
 
-    <div class="history-item">
+    const dateText =
+      formatHistoryDate(history.date);
 
-      <div class="history-content">
-        ${escapeHtml(
-          history.content
-        )}
+    const timeText =
+      formatHistoryTime(history.time);
+
+
+    return `
+
+      <div class="history-item">
+
+        <div class="history-date">
+          ${escapeHtml(dateText)}
+        </div>
+
+        <div class="history-time">
+          ${escapeHtml(timeText)}
+        </div>
+
+        <div class="history-content">
+          ${escapeHtml(history.content)}
+        </div>
+
       </div>
 
-    </div>
+    `;
 
-  `).join("");
+  }).join("");
 
 }
-
+    
     // =========================================================
     // 検索結果表示
     // =========================================================
@@ -1846,6 +1883,70 @@ if (historyList) {
 // 西暦 → 和暦＋西暦
 // =========================================================
 
+// =========================================================
+// 対応履歴の日付表示
+// =========================================================
+
+function formatHistoryDate(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  const parts =
+    value.split("-");
+
+  if (parts.length !== 3) {
+    return value;
+  }
+
+  const year =
+    Number(parts[0]);
+
+  const month =
+    Number(parts[1]);
+
+  const day =
+    Number(parts[2]);
+
+
+  return `${year}年${month}月${day}日（${getJapaneseWeekday(
+    year,
+    month,
+    day
+  )}）`;
+
+}
+
+
+// =========================================================
+// 対応履歴の時刻表示
+// =========================================================
+
+function formatHistoryTime(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  const parts =
+    value.split(":");
+
+  if (parts.length < 2) {
+    return value;
+  }
+
+  const hour =
+    Number(parts[0]);
+
+  const minute =
+    parts[1];
+
+
+  return `${hour}時${minute}分`;
+
+}
+    
 // =========================================================
 // 曜日取得
 // =========================================================
