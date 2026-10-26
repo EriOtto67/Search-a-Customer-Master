@@ -782,39 +782,9 @@ card.addEventListener(
 loading.className = "history-area";
 
 loading.innerHTML = `
-
-  <div class="action-buttons">
-
-    <button
-      type="button"
-      class="action-button"
-      data-action="customer-master"
-    >
-      顧客マスタ確認
-    </button>
-
-    <button
-      type="button"
-      class="action-button"
-      data-action="create-history"
-    >
-      対応履歴作成
-    </button>
-
-    <button
-      type="button"
-      class="action-button"
-      data-action="line-talk"
-    >
-      LINEトーク
-    </button>
-
-  </div>
-
   <div class="history-loading">
     対応履歴を読み込んでいます...
   </div>
-
 `;
 
 card.appendChild(loading);
