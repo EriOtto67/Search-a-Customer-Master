@@ -1287,7 +1287,7 @@
       </div>
 
       <p class="history-password-description">
-        対応履歴を登録するため、パスワードを入力してください。
+        対応履歴を登録するため、登録用パスワードを入力して下さい。
       </p>
 
       <label
@@ -1303,7 +1303,7 @@
         class="history-password-input"
         inputmode="numeric"
         pattern="[0-9]*"
-        placeholder="パスワードを入力"
+        placeholder="登録用パスワードを入力して下さい"
         autocomplete="off"
       >
 
@@ -1477,7 +1477,7 @@ function requestHistoryPassword(
       if (!password) {
 
         historyPasswordMessage.textContent =
-          "パスワードを入力してください。";
+          "パスワードを入力して下さい";
 
         historyPasswordInput.focus();
 
