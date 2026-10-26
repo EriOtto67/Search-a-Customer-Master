@@ -840,6 +840,155 @@
        0件
     ============================== */
 
+    /* ==============================
+   対応履歴登録用パスワード
+============================== */
+
+.history-password-overlay {
+  display: none;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 20px;
+
+  background-color: rgba(0, 0, 0, 0.55);
+
+  align-items: center;
+  justify-content: center;
+
+  cursor: default;
+}
+
+.history-password-overlay.is-open {
+  display: flex;
+}
+
+.history-password-modal {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 26px;
+
+  background-color: #ffffff;
+
+  border-top: 5px solid #00c853;
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 26px rgba(0, 0, 0, 0.28);
+}
+
+.history-password-title {
+  margin: 0 0 12px;
+
+  color: #00b84f;
+
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.history-password-description {
+  margin: 0 0 20px;
+
+  color: #555555;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.history-password-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #333333;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.history-password-input {
+  width: 100%;
+  height: 48px;
+
+  padding: 10px 12px;
+
+  color: #333333;
+  background-color: #ffffff;
+
+  border: 1px solid #cccccc;
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 16px;
+
+  outline: none;
+}
+
+.history-password-input:focus {
+  border-color: #00b84f;
+
+  box-shadow:
+    0 0 0 3px rgba(0, 184, 79, 0.10);
+}
+
+.history-password-message {
+  min-height: 20px;
+
+  margin-top: 8px;
+
+  color: #d93025;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.history-password-button-row {
+  display: flex;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+.history-password-button-row button {
+  flex: 1;
+
+  width: auto;
+  margin-top: 0;
+}
+
+.history-password-cancel-button {
+  color: #ffffff;
+  background-color: #777777;
+
+  border-color: #777777;
+}
+
+.history-password-cancel-button:hover {
+  background-color: #666666;
+  border-color: #666666;
+}
+
+.history-password-confirm-button {
+  color: #ffffff;
+  background-color: #00b84f;
+
+  border-color: #00b84f;
+}
+
+.history-password-confirm-button:hover {
+  background-color: #00a447;
+  border-color: #00a447;
+}
+    
     .no-result {
       padding: 35px 20px;
 
@@ -1122,6 +1271,166 @@ const authButton =
 const authMessage =
   document.getElementById("authMessage");
 
+    // =========================================================
+// 対応履歴登録用パスワードポップアップ
+// =========================================================
+
+const historyPasswordModal =
+  document.getElementById(
+    "historyPasswordModal"
+  );
+
+const historyPasswordInput =
+  document.getElementById(
+    "historyPasswordInput"
+  );
+
+const historyPasswordMessage =
+  document.getElementById(
+    "historyPasswordMessage"
+  );
+
+const historyPasswordCancelButton =
+  document.getElementById(
+    "historyPasswordCancelButton"
+  );
+
+const historyPasswordConfirmButton =
+  document.getElementById(
+    "historyPasswordConfirmButton"
+  );
+
+
+// =========================================================
+// 対応履歴登録用パスワードを入力
+// =========================================================
+
+function requestHistoryPassword(
+  initialMessage = ""
+) {
+
+  return new Promise(function (resolve) {
+
+    historyPasswordInput.value = "";
+
+    historyPasswordMessage.textContent =
+      initialMessage;
+
+
+    historyPasswordModal.classList.add(
+      "is-open"
+    );
+
+    historyPasswordModal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+
+    setTimeout(function () {
+
+      historyPasswordInput.focus();
+
+    }, 0);
+
+
+    function closeHistoryPasswordModal() {
+
+      historyPasswordModal.classList.remove(
+        "is-open"
+      );
+
+      historyPasswordModal.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      historyPasswordInput.value = "";
+
+      historyPasswordMessage.textContent = "";
+
+      historyPasswordConfirmButton.onclick =
+        null;
+
+      historyPasswordCancelButton.onclick =
+        null;
+
+      historyPasswordInput.onkeydown =
+        null;
+
+    }
+
+
+    function confirmHistoryPassword() {
+
+      const password =
+        historyPasswordInput.value.trim();
+
+
+      if (!password) {
+
+        historyPasswordMessage.textContent =
+          "パスワードを入力してください。";
+
+        historyPasswordInput.focus();
+
+        return;
+
+      }
+
+
+      closeHistoryPasswordModal();
+
+      resolve(password);
+
+    }
+
+
+    historyPasswordCancelButton.onclick =
+      function () {
+
+        closeHistoryPasswordModal();
+
+        resolve(null);
+
+      };
+
+
+    historyPasswordConfirmButton.onclick =
+      function () {
+
+        confirmHistoryPassword();
+
+      };
+
+
+    historyPasswordInput.onkeydown =
+      function (event) {
+
+        if (event.key === "Enter") {
+
+          event.preventDefault();
+
+          confirmHistoryPassword();
+
+        }
+
+
+        if (event.key === "Escape") {
+
+          event.preventDefault();
+
+          closeHistoryPasswordModal();
+
+          resolve(null);
+
+        }
+
+      };
+
+  });
+
+}
 
 const searchInput =
   document.getElementById("searchInput");
@@ -2152,7 +2461,7 @@ form
         }
       );
 
-    // =====================================================
+// =====================================================
 // 登録する
 // =====================================================
 
@@ -2194,153 +2503,7 @@ form
       // 対応内容
       const content =
         form
-          .querySelector(".history-content-input")
-          .value
-          .trim();
-
-
-      // フォームを開いた瞬間に保持した日時
-      const date =
-        form.dataset.date;
-
-      const time =
-        form.dataset.time;
-
-
-      // 必須チェック
-      if (types.length === 0) {
-
-        alert("対応種別を選択してください。");
-
-        return;
-
-      }
-
-
-      const submitButton =
-        form.querySelector(".form-submit-button");
-
-
-      // 二重登録防止
-      submitButton.disabled = true;
-      submitButton.textContent = "登録中...";
-
-
-      try {
-
-        const response =
-          await fetch(
-            HISTORY_CREATE_API_URL,
-            {
-
-              method: "POST",
-
-              headers: {
-                "Content-Type": "application/json"
-              },
-
-              body: JSON.stringify({
-
-                vehicleId: recordId,
-
-                date: date,
-
-                time: time,
-
-                types: types,
-
-                approaches: approaches,
-
-                staff: staff,
-
-                content: content
-
-              })
-
-            }
-          );
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            `HTTPエラー: ${response.status}`
-          );
-
-        }
-
-
-        const data =
-          await response.json();
-
-
-        console.log(
-          "対応履歴登録結果:",
-          data
-        );
-
-
-        if (!data.success) {
-
-          throw new Error(
-            "登録結果が正常ではありません。"
-          );
-
-        }
-
-
-        alert(
-  "対応履歴を登録しました。"
-);
-
-
-// 登録フォームを閉じる
-form.remove();
-
-
-// 最新の対応履歴を再取得
-const latestHistories =
-  await fetchHistories(recordId);
-
-
-// 対応履歴一覧を更新
-const historyList =
-  loading.querySelector(".history-list");
-
-
-if (historyList) {
-
-  historyList.innerHTML =
-    createHistoryHtml(
-      latestHistories
-    );
-
-}
-
-      }
-
-      catch (error) {
-
-        console.error(
-          "対応履歴登録エラー:",
-          error
-        );
-
-
-        alert(
-          "対応履歴の登録に失敗しました。"
-        );
-
-
-        // 再度押せるように戻す
-        submitButton.disabled = false;
-        submitButton.textContent = "登録する";
-
-      }
-
-    }
-  );
-
+          .querySelector
     // フォーム内クリックでカードを閉じない
     form.addEventListener(
       "click",
@@ -2548,6 +2711,81 @@ function normalizeText(value) {
       return div.innerHTML;
 
     }
+
+      <!-- =====================================================
+       対応履歴登録用パスワードポップアップ
+  ====================================================== -->
+
+  <div
+    id="historyPasswordModal"
+    class="history-password-overlay"
+    aria-hidden="true"
+  >
+
+    <div
+      class="history-password-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="historyPasswordModalTitle"
+    >
+
+      <div
+        id="historyPasswordModalTitle"
+        class="history-password-title"
+      >
+        対応履歴登録
+      </div>
+
+      <p class="history-password-description">
+        対応履歴を登録するため、パスワードを入力してください。
+      </p>
+
+      <label
+        for="historyPasswordInput"
+        class="history-password-label"
+      >
+        パスワード
+      </label>
+
+      <input
+        type="password"
+        id="historyPasswordInput"
+        class="history-password-input"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        placeholder="パスワードを入力"
+        autocomplete="off"
+      >
+
+      <div
+        id="historyPasswordMessage"
+        class="history-password-message"
+        aria-live="polite"
+      ></div>
+
+      <div class="history-password-button-row">
+
+        <button
+          type="button"
+          id="historyPasswordCancelButton"
+          class="history-password-cancel-button"
+        >
+          キャンセル
+        </button>
+
+        <button
+          type="button"
+          id="historyPasswordConfirmButton"
+          class="history-password-confirm-button"
+        >
+          確認して登録
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 
   </script>
 
