@@ -338,8 +338,18 @@
 
   font-size: 16px;
   font-weight: 500;
+}
 
-  line-height: 1.8;
+.form-date-line {
+  display: block;
+  width: 100%;
+  line-height: 1.6;
+}
+
+.form-time-line {
+  display: block;
+  width: 100%;
+  line-height: 1.6;
 }
     
     /* ==============================
@@ -1338,10 +1348,16 @@ historyCreateButton.addEventListener(
   </div>
 
   <div class="form-datetime">
-  ${year}年${Number(month)}月${Number(day)}日（${getJapaneseWeekday(year, month, day)}）
-  <br>
-  ${Number(hour)}時${minute}分
-</div>
+
+    <div class="form-date-line">
+      ${year}年${Number(month)}月${Number(day)}日（${getJapaneseWeekday(year, month, day)}）
+    </div>
+
+    <div class="form-time-line">
+      ${Number(hour)}時${minute}分
+    </div>
+
+  </div>
 
 </div>
 
