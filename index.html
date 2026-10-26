@@ -225,6 +225,60 @@
       font-weight: 300;
     }
 
+    /* ==============================
+   対応履歴
+============================== */
+
+.history-area {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #e2e2e2;
+}
+
+.history-title {
+  margin-bottom: 12px;
+  color: #00b84f;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.history-list {
+  display: grid;
+  gap: 0;
+}
+
+.history-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-date {
+  margin-bottom: 5px;
+  color: #777;
+  font-size: 13px;
+}
+
+.history-content {
+  color: #333;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.history-loading,
+.history-empty {
+  color: #777;
+  font-size: 14px;
+}
+
+.history-error {
+  color: #c62828;
+  font-size: 14px;
+}
 
     /* ==============================
        0件
@@ -356,9 +410,12 @@
     // 設定
     // =========================================================
 
-    const API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/10fd962b222f4bab947db7f2043a2173/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=y7tFxGxuDfJFJM4ExAF14D-DdV7Y3q7AvJzPXCgK44g";
+    //車両検索
+    const SEARCH_API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/10fd962b222f4bab947db7f2043a2173/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=y7tFxGxuDfJFJM4ExAF14D-DdV7Y3q7AvJzPXCgK44g";
 
-
+    // 対応履歴取得
+    const HISTORY_API_URL = "https://default1a2cf14ad33440fe9e6c8e9728b84d.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/15/workflows/8e2c8217ed224cf39c19df016ace6f73/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=u4ZWV2byxn9qOV8sLU4RII0MBRn1HMYaw-Ff7gv7rfQ";
+    
     // =========================================================
     // DOM
     // =========================================================
@@ -411,20 +468,19 @@ async function searchVehicle(keyword) {
 
   try {
 
-    const response = await fetch(API_URL, {
+const response = await fetch(SEARCH_API_URL, {
 
-      method: "POST",
+  method: "POST",
 
-      headers: {
-        "Content-Type": "application/json"
-      },
+  headers: {
+    "Content-Type": "application/json"
+  },
 
-      body: JSON.stringify({
-        keyword: keyword
-      })
+  body: JSON.stringify({
+    keyword: keyword
+  })
 
-    });
-
+});
 
     if (!response.ok) {
 
@@ -615,45 +671,157 @@ async function searchVehicle(keyword) {
         `;
 
 
-        // =====================================================
-        // カードクリック
-        // =====================================================
+// =====================================================
+// カードクリック
+// 対応履歴を取得・表示
+// =====================================================
 
-        card.addEventListener(
-          "click",
-          () => {
+card.addEventListener(
+  "click",
+  async () => {
+
+    const recordId =
+      card.dataset.recordId;
+
+    // すでに履歴表示済みなら閉じる
+    const existingHistory =
+      card.querySelector(".history-area");
+
+    if (existingHistory) {
+
+      existingHistory.remove();
+
+      return;
+
+    }
 
 
-            const recordId =
-              card.dataset.recordId;
+    // 読み込み中表示
+    const loading =
+      document.createElement("div");
+
+    loading.className = "history-area";
+
+    loading.innerHTML = `
+      <div class="history-loading">
+        対応履歴を読み込んでいます...
+      </div>
+    `;
+
+    card.appendChild(loading);
 
 
-            console.log(
-              "選択されたレコード番号:",
-              recordId
-            );
+    try {
+
+      const response = await fetch(
+        HISTORY_API_URL,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            vehicleId: recordId
+          })
+
+        }
+      );
 
 
-            console.log(
-              "選択されたレコード:",
-              record
-            );
+      if (!response.ok) {
 
-
-            /*
-             * 今後ここから
-             *
-             * ・顧客詳細
-             * ・車両詳細
-             * ・関連アプリ
-             *
-             * へ展開する。
-             */
-
-          }
+        throw new Error(
+          `HTTPエラー: ${response.status}`
         );
 
+      }
 
+
+      const data =
+        await response.json();
+
+
+      const histories =
+        data.histories || [];
+
+
+      // 履歴0件
+      if (histories.length === 0) {
+
+        loading.innerHTML = `
+          <div class="history-title">
+            対応履歴
+          </div>
+
+          <div class="history-empty">
+            対応履歴はありません。
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      // 履歴HTML作成
+      const historyHtml =
+        histories.map(history => `
+
+          <div class="history-item">
+
+            <div class="history-date">
+              ${escapeHtml(
+                formatHistoryDate(history.date)
+              )}
+            </div>
+
+            <div class="history-content">
+              ${escapeHtml(
+                history.content
+              )}
+            </div>
+
+          </div>
+
+        `).join("");
+
+
+      loading.innerHTML = `
+
+        <div class="history-title">
+          対応履歴
+        </div>
+
+        <div class="history-list">
+          ${historyHtml}
+        </div>
+
+      `;
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "対応履歴取得エラー:",
+        error
+      );
+
+
+      loading.innerHTML = `
+        <div class="history-error">
+          対応履歴を取得できませんでした。
+        </div>
+      `;
+
+    }
+
+  }
+);
+        
         results.appendChild(card);
 
       });
@@ -703,12 +871,42 @@ function formatInspectionDate(value) {
   return `${wareki}（${seireki}）`;
 }
 
-    // =========================================================
-    // 検索文字正規化
-    // =========================================================
 
-    function normalizeText(value) {
+// =========================================================
+// 対応日表示
+// =========================================================
 
+function formatHistoryDate(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  const parts =
+    value.split("-");
+
+  if (parts.length !== 3) {
+    return value;
+  }
+
+  const year =
+    Number(parts[0]);
+
+  const month =
+    Number(parts[1]);
+
+  const day =
+    Number(parts[2]);
+
+  return `${year}年${month}月${day}日`;
+}
+
+
+// =========================================================
+// 検索文字正規化
+// =========================================================
+
+function normalizeText(value) {
       return String(
         value ?? ""
       )
