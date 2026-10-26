@@ -645,18 +645,17 @@ async function searchVehicle(keyword) {
   </div>
 
 
-  <div class="label">
-    車検満了日
-  </div>
+<div class="label">
+  車検満了日
+</div>
 
-  <div class="value">
+<div class="value">
 
-    ${escapeHtml(
-      record.inspectionDate
-    )}
+  ${escapeHtml(
+    formatInspectionDate(record.inspectionDate)
+  )}
 
-  </div>
-
+</div>
 
 </div>
           <div class="arrow">
@@ -711,6 +710,48 @@ async function searchVehicle(keyword) {
 
     }
 
+    // =========================================================
+// 車検満了日表示
+// 西暦 → 和暦＋西暦
+// =========================================================
+
+function formatInspectionDate(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  const parts = value.split("-");
+
+  if (parts.length !== 3) {
+    return value;
+  }
+
+  const year = Number(parts[0]);
+  const month = Number(parts[1]);
+  const day = Number(parts[2]);
+
+  const date = new Date(
+    year,
+    month - 1,
+    day
+  );
+
+  const wareki = new Intl.DateTimeFormat(
+    "ja-JP-u-ca-japanese",
+    {
+      era: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    }
+  ).format(date);
+
+  const seireki =
+    `${year}年${month}月${day}日`;
+
+  return `${wareki}（${seireki}）`;
+}
 
     // =========================================================
     // 検索文字正規化
