@@ -226,6 +226,48 @@
     }
 
     /* ==============================
+   操作ボタン
+============================== */
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0 4px;
+}
+
+.action-button {
+  flex: 1;
+
+  padding: 11px 10px;
+
+  background: #ffffff;
+  color: #00b84f;
+
+  border: 2px solid #00b84f;
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    transform 0.15s;
+}
+
+.action-button:hover {
+  background: #00b84f;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+    /* ==============================
    対応履歴
 ============================== */
 
@@ -673,12 +715,40 @@ const response = await fetch(SEARCH_API_URL, {
 </div>
 
 </div>
+
           <div class="arrow">
-            ›
-          </div>
+  ›
+</div>
 
-        `;
+<div class="action-buttons">
 
+  <button
+    type="button"
+    class="action-button"
+    data-action="customer-master"
+  >
+    顧客マスタ確認
+  </button>
+
+  <button
+    type="button"
+    class="action-button"
+    data-action="create-history"
+  >
+    対応履歴作成
+  </button>
+
+  <button
+    type="button"
+    class="action-button"
+    data-action="line-talk"
+  >
+    LINEトーク
+  </button>
+
+</div>
+
+`;
 
 // =====================================================
 // カードクリック
@@ -709,16 +779,45 @@ card.addEventListener(
     const loading =
       document.createElement("div");
 
-    loading.className = "history-area";
+loading.className = "history-area";
 
-    loading.innerHTML = `
-      <div class="history-loading">
-        対応履歴を読み込んでいます...
-      </div>
-    `;
+loading.innerHTML = `
 
-    card.appendChild(loading);
+  <div class="action-buttons">
 
+    <button
+      type="button"
+      class="action-button"
+      data-action="customer-master"
+    >
+      顧客マスタ確認
+    </button>
+
+    <button
+      type="button"
+      class="action-button"
+      data-action="create-history"
+    >
+      対応履歴作成
+    </button>
+
+    <button
+      type="button"
+      class="action-button"
+      data-action="line-talk"
+    >
+      LINEトーク
+    </button>
+
+  </div>
+
+  <div class="history-loading">
+    対応履歴を読み込んでいます...
+  </div>
+
+`;
+
+card.appendChild(loading);
 
     try {
 
@@ -793,16 +892,44 @@ card.addEventListener(
 
       loading.innerHTML = `
 
-        <div class="history-title">
-          対応履歴
-        </div>
+  <div class="action-buttons">
 
-        <div class="history-list">
-          ${historyHtml}
-        </div>
+    <button
+      type="button"
+      class="action-button"
+      data-action="customer-master"
+    >
+      顧客マスタ確認
+    </button>
 
-      `;
+    <button
+      type="button"
+      class="action-button"
+      data-action="create-history"
+    >
+      対応履歴作成
+    </button>
 
+    <button
+      type="button"
+      class="action-button"
+      data-action="line-talk"
+    >
+      LINEトーク
+    </button>
+
+  </div>
+
+  <div class="history-title">
+    対応履歴
+  </div>
+
+  <div class="history-list">
+    ${historyHtml}
+  </div>
+
+`;
+      
     }
 
     catch (error) {
