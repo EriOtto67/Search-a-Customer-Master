@@ -610,8 +610,8 @@
 
 .history-item {
   display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 18px;
+  grid-template-columns: 220px minmax(0, 1fr);
+  column-gap: 18px;
 
   align-items: start;
 
@@ -619,13 +619,16 @@
 
   border-bottom: 1px solid #eeeeee;
 }
-
+    
 .history-item:last-child {
   border-bottom: none;
 }
 
 .history-datetime {
   min-width: 0;
+  margin: 0;
+  padding: 0;
+  align-self: start;
 }
 
 .history-date {
@@ -649,7 +652,10 @@
 .history-content {
   min-width: 0;
 
-  padding-top: 1px;
+  margin: 0;
+  padding: 0;
+
+  align-self: start;
 
   color: #333;
 
@@ -660,7 +666,8 @@
 
   white-space: pre-wrap;
 }
-.history-loading,
+    
+    .history-loading,
 .history-empty {
   color: #777;
   font-size: 14px;
