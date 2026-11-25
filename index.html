@@ -1332,13 +1332,12 @@
 </label>
 
 <input
-  type="password"
-  id="authPassword"
-  class="auth-input"
-  inputmode="numeric"
-  pattern="[0-9]*"
-  placeholder="パスワードを入力して下さい"
-  autocomplete="off"
+ type="password"
+ id="authPassword"
+ class="auth-input"
+ inputmode="text"
+ placeholder="パスワードを入力して下さい"
+ autocomplete="off"
 >
       
       <div
@@ -1717,25 +1716,31 @@ let authenticatedStaffSSDisplay = "";
 // Enterキーで検索
 // =========================================================
 
-    // =========================================================
+// =========================================================
 // パスワード入力
+// 半角英数字・半角記号のみ許可
 // =========================================================
 
 authPasswordInput.addEventListener(
-  "input",
-  function () {
+ "input",
+ function () {
 
-    // 半角数字以外を削除
-    this.value =
-      this.value.replace(
-        /[^0-9]/g,
-        ""
-      );
+ // ASCIIの表示可能文字以外を削除
+ // 許可範囲：
+ // 半角英字
+ // 半角数字
+ // 半角記号
+ // ※半角スペースは除外
+ this.value =
+ this.value.replace(
+ /[^\x21-\x7E]/g,
+ ""
+ );
 
-    // エラー表示を消す
-    authMessage.textContent = "";
+ // エラー表示を消す
+ authMessage.textContent = "";
 
-  }
+ }
 );
 
 
