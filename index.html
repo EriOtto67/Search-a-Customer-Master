@@ -2995,6 +2995,19 @@ return `
 
   </div>
 
+ <div class="label">
+ 連絡先
+ </div>
+
+ <div class="value">
+
+ ${escapeHtml(
+  [record.phone1, record.phone2]
+   .filter(value => String(value ?? "").trim() !== "")
+   .join(" / ")
+ )}
+
+ </div>
 
 <div class="label">
   車検満了日
