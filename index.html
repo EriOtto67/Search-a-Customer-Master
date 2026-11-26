@@ -450,6 +450,54 @@
  line-height: 1.5;
 }
 
+  /* ==============================
+ 検索リセット
+============================== */
+
+.search-reset-area {
+ max-width: 640px;
+
+ margin: 8px auto 0;
+
+ display: flex;
+ justify-content: flex-end;
+}
+
+.search-reset-button {
+ min-width: 100px;
+ height: 38px;
+
+ padding: 0 18px;
+
+ color: #666666;
+ background: #ffffff;
+
+ border: 1px solid #cccccc;
+ border-radius: 19px;
+
+ font-family: inherit;
+ font-size: 14px;
+ font-weight: 700;
+
+ cursor: pointer;
+
+ transition:
+ background-color 0.15s,
+ border-color 0.15s,
+ color 0.15s;
+}
+
+.search-reset-button:hover {
+ color: #333333;
+ background: #f5f5f5;
+
+ border-color: #aaaaaa;
+}
+
+.search-reset-button:active {
+ background: #eeeeee;
+}
+
     /* ==============================
        検索状態
     ============================== */
@@ -1754,6 +1802,22 @@
 
 </div>
 
+   <!-- ============================
+ 検索リセット
+============================= -->
+
+<div class="search-reset-area">
+
+ <button
+ type="button"
+ id="searchResetButton"
+ class="search-reset-button"
+ >
+  リセット
+ </button>
+
+</div>
+   
     <!-- ============================
          検索状態
     ============================= -->
@@ -2056,6 +2120,11 @@ const results =
 const status =
   document.getElementById("status");
 
+   const searchResetButton =
+ document.getElementById(
+ "searchResetButton"
+ );
+
    // =========================================================
 // SSフィルター
 // =========================================================
@@ -2320,6 +2389,78 @@ document.addEventListener(
 
 // 初期表示
 updateSSFilterDisplay();
+
+   // =========================================================
+// 検索リセット
+// =========================================================
+
+searchResetButton.addEventListener(
+ "click",
+ function () {
+
+  // =========================================
+  // 検索文字列をクリア
+  // =========================================
+
+  searchInput.value = "";
+
+
+  // =========================================
+  // SSフィルターをすべて解除
+  // =========================================
+
+  document
+   .querySelectorAll(
+    'input[name="ss-filter"]'
+   )
+   .forEach(
+    checkbox => {
+
+     checkbox.checked = false;
+
+    }
+   );
+
+
+  // =========================================
+  // SSフィルター表示を初期状態へ戻す
+  // =========================================
+
+  updateSSFilterDisplay();
+
+
+  // =========================================
+  // SSフィルターが開いていれば閉じる
+  // =========================================
+
+  setSSFilterMenuOpen(
+   false
+  );
+
+
+  // =========================================
+  // 検索状態をクリア
+  // 「検索中...」「検索結果：○件」など
+  // =========================================
+
+  status.textContent = "";
+
+
+  // =========================================
+  // 現在表示している検索結果をすべて削除
+  // =========================================
+
+  results.innerHTML = "";
+
+
+  // =========================================
+  // 検索窓へカーソルを戻す
+  // =========================================
+
+  searchInput.focus();
+
+ }
+);
 
 // =========================================================
 // 認証済みSS情報
