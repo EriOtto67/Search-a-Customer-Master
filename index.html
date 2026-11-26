@@ -255,6 +255,201 @@
       color: #aaa;
     }
 
+  /* ==============================
+ SSフィルター
+============================== */
+
+.ss-filter-area {
+ position: relative;
+
+ max-width: 640px;
+
+ margin: 14px auto 0;
+}
+
+.ss-filter-button {
+ width: 100%;
+ min-height: 48px;
+
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+
+ padding: 10px 18px;
+
+ color: #00b84f;
+ background: #ffffff;
+
+ border: 2px solid #00b84f;
+ border-radius: 24px;
+
+ font-family: inherit;
+ font-size: 15px;
+ font-weight: 700;
+
+ cursor: pointer;
+
+ transition:
+ background-color 0.15s,
+ color 0.15s,
+ box-shadow 0.15s;
+}
+
+.ss-filter-button:hover {
+ background: #f0fff6;
+}
+
+.ss-filter-area.open .ss-filter-button {
+ color: #ffffff;
+ background: #00b84f;
+
+ box-shadow:
+ 0 0 0 4px rgba(0, 200, 83, 0.12);
+}
+
+.ss-filter-button-text {
+ min-width: 0;
+
+ overflow: hidden;
+
+ text-align: left;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
+
+.ss-filter-button-arrow {
+ flex-shrink: 0;
+
+ margin-left: 12px;
+
+ font-size: 12px;
+}
+
+.ss-filter-menu {
+ display: none;
+
+ position: absolute;
+ top: calc(100% + 6px);
+ left: 0;
+
+ z-index: 200;
+
+ width: 100%;
+ max-height: 360px;
+
+ overflow-y: auto;
+
+ padding: 10px;
+
+ background: #ffffff;
+
+ border: 1px solid #d5d5d5;
+ border-radius: 12px;
+
+ box-shadow:
+ 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.ss-filter-area.open .ss-filter-menu {
+ display: block;
+}
+
+.ss-filter-option {
+ display: flex;
+ align-items: center;
+
+ gap: 10px;
+
+ padding: 11px 10px;
+
+ color: #333333;
+
+ font-size: 15px;
+ font-weight: 500;
+
+ border-radius: 7px;
+
+ cursor: pointer;
+}
+
+.ss-filter-option:hover {
+ background: #f0f8f3;
+}
+
+.ss-filter-option input {
+ flex-shrink: 0;
+
+ width: 18px;
+ height: 18px;
+
+ accent-color: #00b84f;
+
+ cursor: pointer;
+}
+
+.ss-filter-menu-actions {
+ display: flex;
+
+ gap: 10px;
+
+ margin-top: 8px;
+ padding-top: 10px;
+
+ border-top: 1px solid #e2e2e2;
+}
+
+.ss-filter-clear-button,
+.ss-filter-close-button {
+ flex: 1;
+
+ min-height: 40px;
+
+ padding: 8px 10px;
+
+ border-radius: 7px;
+
+ font-family: inherit;
+ font-size: 14px;
+ font-weight: 700;
+
+ cursor: pointer;
+}
+
+.ss-filter-clear-button {
+ color: #666666;
+ background: #ffffff;
+
+ border: 1px solid #cccccc;
+}
+
+.ss-filter-clear-button:hover {
+ background: #f5f5f5;
+}
+
+.ss-filter-close-button {
+ color: #ffffff;
+ background: #00b84f;
+
+ border: 1px solid #00b84f;
+}
+
+.ss-filter-close-button:hover {
+ background: #00a447;
+ border-color: #00a447;
+}
+
+.ss-filter-summary {
+ min-height: 20px;
+
+ margin-top: 7px;
+ padding-left: 18px;
+
+ color: #666666;
+
+ font-size: 13px;
+ line-height: 1.5;
+}
+
     /* ==============================
        検索状態
     ============================== */
@@ -1404,6 +1599,160 @@
 
     </div>
 
+   <!-- ============================
+ SSフィルター
+============================= -->
+
+<div
+ id="ssFilterArea"
+ class="ss-filter-area"
+>
+
+ <button
+ type="button"
+ id="ssFilterButton"
+ class="ss-filter-button"
+ aria-expanded="false"
+ >
+
+  <span
+  id="ssFilterButtonText"
+  class="ss-filter-button-text"
+  >
+   SSフィルター：指定なし
+  </span>
+
+  <span class="ss-filter-button-arrow">
+   ▼
+  </span>
+
+ </button>
+
+ <div
+ id="ssFilterMenu"
+ class="ss-filter-menu"
+ >
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="EneJetニュー長浜"
+   data-label="ニュー長浜"
+   >
+   ニュー長浜
+  </label>
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="EneJet彦根"
+   data-label="EJ彦根"
+   >
+   EJ彦根
+  </label>
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="Dr.Drive八日市"
+   data-label="DD八日市"
+   >
+   DD八日市
+  </label>
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="ニュー近江八幡"
+   data-label="ニュー近八"
+   >
+   ニュー近八
+  </label>
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="EneJet竜王"
+   data-label="EJ竜王"
+   >
+   EJ竜王
+  </label>
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="Dr.Drive守山"
+   data-label="DD守山"
+   >
+   DD守山
+  </label>
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="EneJet栗東"
+   data-label="EJ栗東中央"
+   >
+   EJ栗東中央
+  </label>
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="EneJet湖南草津"
+   data-label="EJ湖南草津"
+   >
+   EJ湖南草津
+  </label>
+
+  <label class="ss-filter-option">
+   <input
+   type="checkbox"
+   name="ss-filter"
+   value="EneJet京滋バイパス"
+   data-label="京滋BP"
+   >
+   京滋BP
+  </label>
+
+  <div class="ss-filter-menu-actions">
+
+   <button
+   type="button"
+   id="ssFilterClearButton"
+   class="ss-filter-clear-button"
+   >
+    選択解除
+   </button>
+
+   <button
+   type="button"
+   id="ssFilterCloseButton"
+   class="ss-filter-close-button"
+   >
+    決定
+   </button>
+
+  </div>
+
+ </div>
+
+ <div
+ id="ssFilterSummary"
+ class="ss-filter-summary"
+ >
+  全SSを検索します
+ </div>
+
+</div>
 
     <!-- ============================
          検索状態
@@ -1707,6 +2056,270 @@ const results =
 const status =
   document.getElementById("status");
 
+   // =========================================================
+// SSフィルター
+// =========================================================
+
+const ssFilterArea =
+ document.getElementById(
+ "ssFilterArea"
+ );
+
+const ssFilterButton =
+ document.getElementById(
+ "ssFilterButton"
+ );
+
+const ssFilterButtonText =
+ document.getElementById(
+ "ssFilterButtonText"
+ );
+
+const ssFilterMenu =
+ document.getElementById(
+ "ssFilterMenu"
+ );
+
+const ssFilterSummary =
+ document.getElementById(
+ "ssFilterSummary"
+ );
+
+const ssFilterClearButton =
+ document.getElementById(
+ "ssFilterClearButton"
+ );
+
+const ssFilterCloseButton =
+ document.getElementById(
+ "ssFilterCloseButton"
+ );
+
+   // =========================================================
+// 選択中のSSを取得
+// =========================================================
+
+function getSelectedSSFilters() {
+
+ return Array.from(
+  document.querySelectorAll(
+   'input[name="ss-filter"]:checked'
+  )
+ ).map(
+  checkbox => checkbox.value
+ );
+
+}
+
+
+// =========================================================
+// 選択中のSS表示名を取得
+// =========================================================
+
+function getSelectedSSFilterLabels() {
+
+ return Array.from(
+  document.querySelectorAll(
+   'input[name="ss-filter"]:checked'
+  )
+ ).map(
+  checkbox =>
+   checkbox.dataset.label ||
+   checkbox.value
+ );
+
+}
+
+
+// =========================================================
+// SSフィルターの表示を更新
+// =========================================================
+
+function updateSSFilterDisplay() {
+
+ const selectedLabels =
+  getSelectedSSFilterLabels();
+
+
+ if (selectedLabels.length === 0) {
+
+  ssFilterButtonText.textContent =
+   "SSフィルター：指定なし";
+
+  ssFilterSummary.textContent =
+   "全SSを検索します";
+
+  return;
+
+ }
+
+
+ ssFilterButtonText.textContent =
+  `SSフィルター：${selectedLabels.join("、")}`;
+
+ ssFilterSummary.textContent =
+  `${selectedLabels.length}店舗を検索対象にしています`;
+
+}
+
+
+// =========================================================
+// SSフィルターメニューを開く・閉じる
+// =========================================================
+
+function setSSFilterMenuOpen(isOpen) {
+
+ ssFilterArea.classList.toggle(
+  "open",
+  isOpen
+ );
+
+ ssFilterButton.setAttribute(
+  "aria-expanded",
+  String(isOpen)
+ );
+
+}
+
+
+// =========================================================
+// SSフィルターボタン
+// =========================================================
+
+ssFilterButton.addEventListener(
+ "click",
+ function (event) {
+
+  event.stopPropagation();
+
+  const isOpen =
+   ssFilterArea.classList.contains(
+    "open"
+   );
+
+  setSSFilterMenuOpen(
+   !isOpen
+  );
+
+ }
+);
+
+
+// =========================================================
+// SS選択変更
+// =========================================================
+
+document
+ .querySelectorAll(
+  'input[name="ss-filter"]'
+ )
+ .forEach(
+  checkbox => {
+
+   checkbox.addEventListener(
+    "change",
+    function () {
+
+     updateSSFilterDisplay();
+
+    }
+   );
+
+  }
+ );
+
+
+// =========================================================
+// SSフィルター選択解除
+// =========================================================
+
+ssFilterClearButton.addEventListener(
+ "click",
+ function (event) {
+
+  event.stopPropagation();
+
+  document
+   .querySelectorAll(
+    'input[name="ss-filter"]'
+   )
+   .forEach(
+    checkbox => {
+
+     checkbox.checked = false;
+
+    }
+   );
+
+  updateSSFilterDisplay();
+
+ }
+);
+
+
+// =========================================================
+// SSフィルター決定
+// =========================================================
+
+ssFilterCloseButton.addEventListener(
+ "click",
+ function (event) {
+
+  event.stopPropagation();
+
+  updateSSFilterDisplay();
+
+  setSSFilterMenuOpen(
+   false
+  );
+
+  searchInput.focus();
+
+ }
+);
+
+
+// =========================================================
+// SSフィルター内クリック
+// 外側クリック処理へ伝播させない
+// =========================================================
+
+ssFilterMenu.addEventListener(
+ "click",
+ function (event) {
+
+  event.stopPropagation();
+
+ }
+);
+
+
+// =========================================================
+// SSフィルターの外側をクリックしたら閉じる
+// =========================================================
+
+document.addEventListener(
+ "click",
+ function (event) {
+
+  if (
+   !ssFilterArea.contains(
+    event.target
+   )
+  ) {
+
+   setSSFilterMenuOpen(
+    false
+   );
+
+  }
+
+ }
+);
+
+
+// 初期表示
+updateSSFilterDisplay();
 
 // =========================================================
 // 認証済みSS情報
@@ -1969,8 +2582,14 @@ const response = await fetch(SEARCH_API_URL, {
   },
 
   body: JSON.stringify({
-    keyword: keyword
-  })
+
+ keyword:
+  keyword,
+
+ ssFilters:
+  getSelectedSSFilters()
+
+})
 
 });
 
